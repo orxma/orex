@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ORX Tunnel is a complete Ubuntu VPS manager for VPN protocols, tools, and services.">
+  <meta name="theme-color" content="#111614">
+  <title>ORX Tunnel | Ubuntu VPS Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #111614;
+      --paper: #f1efe7;
+      --muted: #9da69d;
+      --line: rgba(241, 239, 231, .15);
+      --lime: #c9f36b;
+      --coral: #ff765f;
+      --cyan: #7edbd2;
+      --panel: #1b2420;
+      --mono: "IBM Plex Mono", monospace;
+      --display: "Space Grotesk", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--paper);
+      background: var(--ink);
+      font-family: var(--display);
+      line-height: 1.5;
+    }
+    a { color: inherit; }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 76px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: .08em; }
+    .brand-mark { width: 26px; height: 26px; border: 2px solid var(--lime); transform: rotate(45deg); position: relative; }
+    .brand-mark::after { content: ""; position: absolute; width: 8px; height: 8px; background: var(--coral); left: 7px; top: 7px; }
+    nav { display: flex; gap: 24px; color: var(--muted); font-family: var(--mono); font-size: .78rem; }
+    nav a { text-decoration: none; }
+    nav a:hover { color: var(--lime); }
+
+    .hero { position: relative; min-height: 620px; display: grid; align-items: center; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; opacity: .18; pointer-events: none;
+      background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black, transparent 85%);
+    }
+    .hero-layout { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 70px; align-items: center; padding: 86px 0 100px; }
+    .eyebrow { color: var(--lime); font-family: var(--mono); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { max-width: 760px; margin: 18px 0 20px; font-size: clamp(3.5rem, 9vw, 7.8rem); line-height: .88; letter-spacing: -.06em; }
+    .hero-copy { max-width: 580px; color: #c5cbc3; font-size: 1.14rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .button { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--lime); padding: 13px 17px; color: var(--ink); background: var(--lime); text-decoration: none; font-family: var(--mono); font-size: .8rem; font-weight: 600; }
+    .button.alt { color: var(--paper); background: transparent; border-color: var(--line); }
+    .button:hover { transform: translateY(-2px); }
+    .hero-card { padding: 24px; border: 1px solid var(--line); background: rgba(27, 36, 32, .86); box-shadow: 16px 16px 0 rgba(126, 219, 210, .12); }
+    .card-label { color: var(--muted); font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; }
+    .signal { display: flex; align-items: center; gap: 10px; margin: 26px 0 30px; font-family: var(--mono); }
+    .signal-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 18px var(--lime); }
+    .host { padding: 14px 0; border-top: 1px solid var(--line); color: var(--cyan); font-family: var(--mono); font-size: .83rem; }
+    .host span { display: block; margin-bottom: 6px; color: var(--muted); font-size: .68rem; }
+
+    section { padding: 92px 0; border-top: 1px solid var(--line); }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 34px; }
+    h2 { margin: 0; font-size: clamp(2rem, 4vw, 3.7rem); line-height: 1; letter-spacing: -.045em; }
+    .section-note { max-width: 360px; margin: 0; color: var(--muted); }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .feature { min-height: 144px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .feature-icon { color: var(--coral); font-family: var(--mono); font-size: 1.1rem; }
+    .feature h3 { margin: 25px 0 4px; font-size: 1rem; }
+    .feature p { margin: 0; color: var(--muted); font-size: .86rem; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+    .list { margin: 0; padding: 0; list-style: none; }
+    .list li { display: flex; justify-content: space-between; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .list li::before { content: "//"; color: var(--coral); font-family: var(--mono); }
+    .list li span { flex: 1; }
+    .status { color: var(--lime); font-family: var(--mono); font-size: .75rem; }
+    .security { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .security-item { padding: 18px; border: 1px solid var(--line); background: var(--panel); }
+    .security-item strong { display: block; margin-bottom: 6px; color: var(--cyan); }
+    .security-item p { margin: 0; color: var(--muted); font-size: .86rem; }
+    .code-block { position: relative; padding: 24px; border: 1px solid var(--line); background: #0b0f0d; font-family: var(--mono); }
+    .code-block code { display: block; padding-right: 74px; overflow-wrap: anywhere; color: var(--lime); font-size: .9rem; }
+    .copy { position: absolute; right: 14px; top: 14px; padding: 7px 9px; border: 1px solid var(--line); color: var(--muted); background: transparent; cursor: pointer; font: 500 .7rem var(--mono); }
+    .copy:hover { color: var(--paper); border-color: var(--paper); }
+    .creator { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 28px 0 0; }
+    .creator strong { font-size: 1.35rem; }
+    .creator p { margin: 5px 0 0; color: var(--muted); }
+    .creator a { color: var(--lime); text-decoration: none; font-family: var(--mono); }
+    footer { padding: 28px 0 42px; color: var(--muted); font-family: var(--mono); font-size: .72rem; }
+    footer span { color: var(--coral); }
+
+    @media (max-width: 800px) {
+      .shell { width: min(100% - 28px, 620px); }
+      nav { display: none; }
+      .hero-layout, .split { grid-template-columns: 1fr; gap: 38px; }
+      .hero { min-height: auto; }
+      .hero-layout { padding: 76px 0 82px; }
+      h1 { font-size: clamp(3.5rem, 19vw, 6rem); }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .section-heading { display: block; }
+      .section-note { margin-top: 16px; }
+      .creator { display: block; }
+      .creator a { display: inline-block; margin-top: 16px; }
+    }
+    @media (max-width: 460px) {
+      .feature-grid, .security { grid-template-columns: 1fr; }
+      .hero-actions .button { width: 100%; justify-content: center; }
+      section { padding: 70px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#top" aria-label="ORX Tunnel home"><span class="brand-mark" aria-hidden="true"></span>ORX TUNNEL</a>
+    <nav aria-label="Main navigation">
+      <a href="#features">Features</a>
+      <a href="#protocols">Protocols</a>
+      <a href="#security">Security</a>
+      <a href="https://t.me/aytou0">@aytou0</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-layout">
+        <div>
+          <div class="eyebrow">Ubuntu VPS control system / v2.0.0</div>
+          <h1>Build your tunnel.</h1>
+          <p class="hero-copy">A complete Ubuntu VPS manager for VPN protocols, server tools, and security services from one focused control panel.</p>
+          <div class="hero-actions">
+            <a class="button" href="#install">Install ORX Tunnel <span aria-hidden="true">↗</span></a>
+            <a class="button alt" href="#protocols">Explore modules <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="ORX Tunnel deployment status">
+          <div class="card-label">Deployment endpoint</div>
+          <div class="signal"><span class="signal-dot" aria-hidden="true"></span>READY TO DEPLOY</div>
+          <div class="host"><span>HOST</span>sc.orx.ma/</div>
+          <div class="host"><span>RELEASE</span>2.0.0 / stable</div>
+          <div class="host"><span>PLATFORM</span>Ubuntu 22.04 / 24.04</div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="shell">
+        <div class="section-heading">
+          <h2>One panel.<br>Many routes.</h2>
+          <p class="section-note">Install, configure, monitor, and maintain the services your VPS depends on without jumping between scripts.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature"><div class="feature-icon">01 /</div><h3>Automatic setup</h3><p>Prepare dependencies and services in one guided installation.</p></article>
+          <article class="feature"><div class="feature-icon">02 /</div><h3>Protocol control</h3><p>Manage SSH, TLS, UDP, DNS, and modern proxy protocols.</p></article>
+          <article class="feature"><div class="feature-icon">03 /</div><h3>User management</h3><p>Create, edit, block, remove, and monitor SSH users.</p></article>
+          <article class="feature"><div class="feature-icon">04 /</div><h3>Server tools</h3><p>Inspect, optimize, secure, restart, and test your VPS.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="protocols">
+      <div class="shell split">
+        <div>
+          <div class="eyebrow">Available modules</div>
+          <h2>Protocols in<br>the toolbox.</h2>
+        </div>
+        <ul class="list" aria-label="Available protocols">
+          <li><span>OpenSSH</span><b class="status">READY</b></li>
+          <li><span>System DNS</span><b class="status">READY</b></li>
+          <li><span>WebSocket</span><b class="status">READY</b></li>
+          <li><span>ZIPVPN</span><b class="status">READY</b></li>
+          <li><span>Dropbear</span><b class="status">READY</b></li>
+          <li><span>SSL / TLS</span><b class="status">READY</b></li>
+          <li><span>BadVPN</span><b class="status">READY</b></li>
+          <li><span>UDP Custom</span><b class="status">READY</b></li>
+          <li><span>V2Ray / Xray</span><b class="status">READY</b></li>
+          <li><span>SlowDNS</span><b class="status">READY</b></li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="security">
+      <div class="shell">
+        <div class="section-heading">
+          <h2>Security, built<br>into the install.</h2>
+          <p class="section-note">The installer includes practical checks and monitoring for a VPS that stays visible and maintainable.</p>
+        </div>
+        <div class="security">
+          <article class="security-item"><strong>Fail2Ban</strong><p>Protect SSH and Dropbear with automatic blocking after repeated failures.</p></article>
+          <article class="security-item"><strong>RKHunter</strong><p>Scan for rootkits and verify modified system binaries.</p></article>
+          <article class="security-item"><strong>Chkrootkit</strong><p>Detect known rootkits with a fast system scan.</p></article>
+          <article class="security-item"><strong>Lynis</strong><p>Audit the server and surface hardening recommendations.</p></article>
+          <article class="security-item"><strong>Usage monitor</strong><p>Capture network usage snapshots through Cron and Systemd.</p></article>
+          <article class="security-item"><strong>VPS dashboard</strong><p>See CPU, memory, disk, uptime, IP, and active protocols together.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="install">
+      <div class="shell split">
+        <div>
+          <div class="eyebrow">Start here</div>
+          <h2>Install in<br>one command.</h2>
+          <p class="section-note">Run the installer as root on a supported Ubuntu VPS. After setup, open the control panel with <code>menu</code>.</p>
+        </div>
+        <div>
+          <div class="code-block"><code id="install-command">bash &lt;(curl -fsSL https://sc.orx.ma/install.sh)</code><button class="copy" data-copy="install-command">COPY</button></div>
+          <div style="height: 14px"></div>
+          <div class="code-block"><code id="update-command">bash &lt;(curl -fsSL https://sc.orx.ma/update.sh)</code><button class="copy" data-copy="update-command">COPY</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <div class="eyebrow">Project author</div>
+        <div class="creator">
+          <div><strong>Aymane Touzani</strong><p>Creator and maintainer of ORX Tunnel.</p></div>
+          <a href="https://t.me/aytou0">Telegram / @aytou0 ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">ORX TUNNEL <span>///</span> UBUNTU VPS MANAGEMENT <span>///</span> VERSION 2.0.0</footer>
+  <script>
+    document.querySelectorAll('[data-copy]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var target = document.getElementById(button.dataset.copy);
+        navigator.clipboard.writeText(target.textContent).then(function () {
+          var original = button.textContent;
+          button.textContent = 'COPIED';
+          setTimeout(function () { button.textContent = original; }, 1400);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
