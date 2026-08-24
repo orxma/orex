@@ -14,7 +14,7 @@ BASE="/etc/orx-tunnel"
 CONFIG="$BASE/config.conf"
 
 [[ -f "$CONFIG" ]] || {
-    echo "❌ No existe $CONFIG"
+    echo "❌ Does not exist $CONFIG"
     exit 1
 }
 
@@ -44,12 +44,12 @@ SLOWDNS_PORT="5300"
 
 STATUS=""
 #==================================================
-# Instalar dependencias
+# Install dependencies
 #==================================================
 
 install_dependencies(){
 
-    echo "📦 Installing dependencias..."
+    echo "📦 Installing dependencies..."
 
     apt update -y
 
@@ -66,7 +66,7 @@ install_dependencies(){
 }
 
 #==================================================
-# Descargar SlowDNS Server
+# Download SlowDNS Server
 #==================================================
 
 install_slowdns_binary(){
@@ -84,7 +84,7 @@ install_slowdns_binary(){
             BIN_NAME="dnstt-server-linux-386"
         ;;
         *)
-            echo "❌ Arquitectura no soportada: $ARCH"
+            echo "❌ Unsupported architecture: $ARCH"
             return 1
         ;;
     esac
@@ -96,10 +96,10 @@ install_slowdns_binary(){
     )
 
     echo ""
-    echo "⬇️ Descargando SlowDNS Server..."
+    echo "⬇️ Downloading SlowDNS Server..."
 
     if [[ -x "$BIN" ]]; then
-        echo "✅ SlowDNS Server ya existe."
+        echo "✅ SlowDNS Server already exists."
         return 0
     fi
 
@@ -126,21 +126,21 @@ install_slowdns_binary(){
     done
 
     if [[ $SUCCESS -eq 0 ]]; then
-        echo "❌ No fue posible descargar SlowDNS Server."
+        echo "❌ Could not download SlowDNS Server."
         return 1
     fi
 
-    echo "✅ SlowDNS Server instalado."
+    echo "✅ SlowDNS Server installed."
 
 }
 
 #==================================================
-# Generar claves
+# Generar keys
 #==================================================
 
 generate_keys(){
 
-    echo "🔑 Generando claves..."
+    echo "🔑 Generando keys..."
 
     if [[ ! -f "$PUBKEY" || ! -f "$PRIVKEY" ]]; then
 
@@ -196,7 +196,7 @@ fi
 
 }
 #==================================================
-# Crear servicio SlowDNS
+# Crear service SlowDNS
 #==================================================
 
 create_slowdns_service(){
@@ -226,7 +226,7 @@ EOF
 }
 
 #==================================================
-# Abrir puerto DNS
+# Abrir port DNS
 #==================================================
 
 open_dns_port(){
@@ -255,7 +255,7 @@ open_dns_port(){
             -j REDIRECT --to-ports 5380
     done
 
-    # Agregar regla IPv4 (igual que el Go)
+    # Add regla IPv4 (igual que el Go)
     iptables -t nat -I PREROUTING 1 \
         -p udp \
         --dport 53 \
@@ -264,7 +264,7 @@ open_dns_port(){
         -j REDIRECT \
         --to-ports 5380
 
-    # Agregar regla IPv6
+    # Add regla IPv6
     ip6tables -t nat -I PREROUTING 1 \
         -p udp \
         --dport 53 \
@@ -275,7 +275,7 @@ open_dns_port(){
 
 }
 #==================================================
-# Instalar SlowDNS
+# Install SlowDNS
 #==================================================
 
 install_slowdns(){
@@ -283,14 +283,14 @@ install_slowdns(){
     clear
 
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-    echo -e "${WHITE}        🚀 INSTALAR SLOWDNS${RESET}"
+    echo -e "${WHITE}        🚀 INSTALL SLOWDNS${RESET}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo ""
 
-    read -rp "🌐 Dominio NS (Ej: ns.midominio.com): " DOMAIN
+    read -rp "🌐 Domain NS (Ej: ns.midomain.com): " DOMAIN
 
     [[ -z "$DOMAIN" ]] && {
-        echo "❌ Dominio inválido."
+        echo "❌ Domain invalid."
         sleep 2
         return
     }
@@ -314,21 +314,21 @@ sleep 1
     open_dns_port
 
     echo ""
-    echo "🔄 Iniciando servicios..."
+    echo "🔄 Starting services..."
 
     systemctl daemon-reload
 
 systemctl enable dnsdist >/dev/null 2>&1
 systemctl enable slowdns >/dev/null 2>&1
 
-# Reiniciar dnsdist primero
+# Restart dnsdist first
 systemctl restart dnsdist
 
 sleep 2
 
-# Verificar que dnsdist quedó activo
+# Verificar que dnsdist is now active
 if ! systemctl is-active --quiet dnsdist; then
-    echo "❌ dnsdist no pudo iniciar."
+    echo "❌ dnsdist could not start."
     journalctl -u dnsdist -n 20 --no-pager
     return 1
 fi
@@ -340,7 +340,7 @@ sleep 2
 
 # Verificar SlowDNS
 if ! systemctl is-active --quiet slowdns; then
-    echo "❌ SlowDNS no pudo iniciar."
+    echo "❌ SlowDNS could not start."
     journalctl -u slowdns -n 20 --no-pager
     return 1
 fi
@@ -361,7 +361,7 @@ fi
         echo "      ✅ SLOWDNS INSTALADO"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
-        echo "🌐 Dominio : $(cat "$DOMAIN_FILE")"
+        echo "🌐 Domain : $(cat "$DOMAIN_FILE")"
         echo ""
         echo "🔑 Public Key:"
         cat "$PUBKEY"
@@ -386,7 +386,7 @@ fi
 
 }
 #==================================================
-# Eliminar SlowDNS
+# Delete SlowDNS
 #==================================================
 
 remove_slowdns(){
@@ -394,11 +394,11 @@ remove_slowdns(){
     clear
 
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-    echo -e "${WHITE}        🗑 ELIMINAR SLOWDNS${RESET}"
+    echo -e "${WHITE}        🗑 DELETE SLOWDNS${RESET}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo ""
 
-    read -rp "¿Eliminar SlowDNS? (s/n): " R
+    read -rp "Delete SlowDNS? (s/n): " R
 
     [[ ! "$R" =~ ^[Ss]$ ]] && return
 
@@ -437,21 +437,21 @@ ip6tables -t nat -D PREROUTING \
     source "$CONFIG"
 
     echo ""
-    echo "✅ SlowDNS eliminado."
+    echo "✅ SlowDNS deleted."
 
     sleep 3
 
 }
 
 #==================================================
-# Reiniciar servicios
+# Restart services
 #==================================================
 
 restart_slowdns(){
 
     clear
 
-    echo "🔄 Reiniciando servicios..."
+    echo "🔄 Restarting services..."
 
     systemctl restart dnsdist
     systemctl restart slowdns
@@ -462,10 +462,10 @@ restart_slowdns(){
        systemctl is-active --quiet slowdns
     then
         echo ""
-        echo "✅ Servicios activos."
+        echo "✅ Services actives."
     else
         echo ""
-        echo "❌ Error al reiniciar."
+        echo "❌ Restart failed."
     fi
 
     sleep 3
@@ -473,7 +473,7 @@ restart_slowdns(){
 }
 
 #==================================================
-# Estado
+# Status
 #==================================================
 
 status_slowdns(){
@@ -481,7 +481,7 @@ status_slowdns(){
     clear
 
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-    echo -e "${WHITE}         📊 ESTADO SLOWDNS${RESET}"
+    echo -e "${WHITE}         📊 STATUS SLOWDNS${RESET}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
     echo ""
@@ -493,11 +493,11 @@ status_slowdns(){
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-    echo "Puertos abiertos:"
+    echo "Ports abiertos:"
     ss -ulnp | grep -E "53|5300" || true
 
     echo ""
-    echo "Dominio:"
+    echo "Domain:"
     [[ -f "$DOMAIN_FILE" ]] && cat "$DOMAIN_FILE"
 
     echo ""
@@ -505,12 +505,12 @@ status_slowdns(){
     [[ -f "$PUBKEY" ]] && cat "$PUBKEY"
 
     echo ""
-    read -n1 -r -p "Presione una tecla..."
+    read -n1 -r -p "Press any key..."
 
 }
 
 #==================================================
-# Mostrar Public Key
+# Show Public Key
 #==================================================
 
 show_key(){
@@ -525,15 +525,15 @@ show_key(){
     if [[ -f "$PUBKEY" ]]; then
         cat "$PUBKEY"
     else
-        echo "❌ No existe la Public Key."
+        echo "❌ Does not exist la Public Key."
     fi
 
     echo ""
-    read -n1 -r -p "Presione una tecla..."
+    read -n1 -r -p "Press any key..."
 
 }
 #==================================================
-# MODO AUTOMÁTICO
+# AUTOMATIC MODE
 #==================================================
 
 if [[ "$1" == "--auto" ]]; then
@@ -541,7 +541,7 @@ if [[ "$1" == "--auto" ]]; then
     exit 0
 fi
 #==================================================
-# Menú Principal
+# Menu Principal
 #==================================================
 
 while true
@@ -552,21 +552,21 @@ do
     source "$CONFIG"
 
     if systemctl is-active --quiet slowdns; then
-        STATUS="${GREEN}🟢 ACTIVO${RESET}"
+        STATUS="${GREEN}🟢 ACTIVE${RESET}"
     else
-        STATUS="${RED}🔴 DETENIDO${RESET}"
+        STATUS="${RED}🔴 STOPPED${RESET}"
     fi
 
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
     echo -e "${WHITE}           🐌 SLOWDNS MANAGER${RESET}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
-    echo -e " Estado      : $STATUS"
-    echo -e " Puerto DNS  : 53"
+    echo -e " Status      : $STATUS"
+    echo -e " Port DNS  : 53"
     echo -e " DNSTT       : 5300"
 
     if [[ -f "$DOMAIN_FILE" ]]; then
-        echo -e " Dominio NS  : ${YELLOW}$(cat "$DOMAIN_FILE")${RESET}"
+        echo -e " Domain NS  : ${YELLOW}$(cat "$DOMAIN_FILE")${RESET}"
     fi
 
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -575,12 +575,12 @@ do
 
 cat <<EOF
 
- [1] ➮ Desinstalar SlowDNS
- [2] ➮ Reiniciar Servicios
- [3] ➮ Ver Estado
- [4] ➮ Ver Public Key
+ [1] ➮ Uninstall SlowDNS
+ [2] ➮ Restart Services
+ [3] ➮ View Status
+ [4] ➮ View Public Key
 
- [0] ➮ Regresar
+ [0] ➮ Return
 
 EOF
 
@@ -588,9 +588,9 @@ EOF
 
 cat <<EOF
 
- [1] ➮ Instalar SlowDNS
+ [1] ➮ Install SlowDNS
 
- [0] ➮ Regresar
+ [0] ➮ Return
 
 EOF
 
@@ -598,7 +598,7 @@ EOF
 
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
-    read -rp " ► Opción: " OP
+    read -rp " ► Option: " OP
 
     case "$OP" in
 
@@ -639,7 +639,7 @@ EOF
         *)
 
             echo ""
-            echo "❌ Opción inválida."
+            echo "❌ Option invalid."
             sleep 2
 
         ;;

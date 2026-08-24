@@ -2,7 +2,7 @@
 #==================================================
 # ORX Tunnel Multi Script
 # SSL Tunnel Manager
-# Parte 1
+# Part 1
 #==================================================
 
 GREEN="\e[1;92m"
@@ -39,10 +39,10 @@ msg_info() {
 
 install_dependencies() {
 
-    msg_info "Actualizando repositorios..."
+    msg_info "Updating repositories..."
     apt-get update -y >/dev/null 2>&1
 
-    msg_info "Installing dependencias..."
+    msg_info "Installing dependencies..."
 
     apt-get install -y \
         haproxy \
@@ -54,9 +54,9 @@ install_dependencies() {
         lsof >/dev/null 2>&1
 
     if [[ $? == 0 ]]; then
-        msg_ok "Dependencias instaladas."
+        msg_ok "Dependencias installeds."
     else
-        msg_error "No se pudieron instalar."
+        msg_error "Could not install."
         return 1
     fi
 
@@ -65,7 +65,7 @@ install_dependencies() {
 generate_certificate() {
 
     if [[ -f "$CERT_FILE" ]]; then
-        msg_ok "Certificado encontrado."
+        msg_ok "Certificado found."
         return
     fi
 
@@ -87,19 +87,19 @@ generate_certificate() {
 
     chmod 600 "$CERT_FILE"
 
-    msg_ok "Certificado creado."
+    msg_ok "Certificado created."
 
 }
 
 kill_ports() {
 
-    msg_info "Liberando puertos..."
+    msg_info "Liberando ports..."
 
     fuser -k 80/tcp >/dev/null 2>&1
     fuser -k 443/tcp >/dev/null 2>&1
     fuser -k 8080/tcp >/dev/null 2>&1
 
-    msg_ok "Puertos liberados."
+    msg_ok "Ports liberados."
 
 }
 
@@ -121,15 +121,15 @@ ssl_tunnel_status() {
     line
 
     if systemctl is-active --quiet haproxy; then
-        echo -e "${GREEN}HAProxy : ACTIVO${RESET}"
+        echo -e "${GREEN}HAProxy : ACTIVE${RESET}"
     else
-        echo -e "${RED}HAProxy : DETENIDO${RESET}"
+        echo -e "${RED}HAProxy : STOPPED${RESET}"
     fi
 
     if systemctl is-active --quiet ssh-ws-internal.service; then
-        echo -e "${GREEN}SSH WS : ACTIVO${RESET}"
+        echo -e "${GREEN}SSH WS : ACTIVE${RESET}"
     else
-        echo -e "${RED}SSH WS : DETENIDO${RESET}"
+        echo -e "${RED}SSH WS : STOPPED${RESET}"
     fi
 
     line
@@ -141,7 +141,7 @@ restart_ssl_tunnel() {
     systemctl restart ssh-ws-internal.service
     systemctl restart haproxy
 
-    msg_ok "Servicios reiniciados."
+    msg_ok "Services reiniciados."
 
 }
 
@@ -165,8 +165,8 @@ remove_ssl_tunnel() {
 
 grep -q "^SSL_TUNNEL=" "$CONFIG" \
     && sed -i 's/^SSL_TUNNEL=.*/SSL_TUNNEL=OFF/' "$CONFIG"
-    
-    msg_ok "SSL Tunnel eliminado."
+
+    msg_ok "SSL Tunnel deleted."
 
 }
 
@@ -179,7 +179,7 @@ clear
 source "$CONFIG" 2>/dev/null
 
 if systemctl is-active --quiet haproxy; then
-    STATUS="${GREEN}🟢 ACTIVO${RESET}"
+    STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
     STATUS="${RED}🔴 DESINSTALADO${RESET}"
 fi
@@ -188,10 +188,10 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "${WHITE}          🔐 SSL TUNNEL MANAGER${RESET}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
-echo -e " Estado      : $STATUS"
-echo -e " Dominio     : ${SERVER_DOMAIN:-NO CONFIGURADO}"
-echo -e " Puertos     : 80, 443, 8080"
-echo -e " Servicio    : HAProxy"
+echo -e " Status      : $STATUS"
+echo -e " Domain     : ${SERVER_DOMAIN:-NO CONFIGURADO}"
+echo -e " Ports     : 80, 443, 8080"
+echo -e " Service    : HAProxy"
 echo -e " Backend     : SSH WebSocket"
 echo -e " Certificado : Auto Firmado"
 
@@ -200,24 +200,24 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 
 if systemctl is-active --quiet haproxy; then
 
-echo " [1] ➮ Reinstalar SSL Tunnel"
-echo " [2] ➮ Reiniciar Servicios"
-echo " [3] ➮ Ver Estado"
-echo " [4] ➮ Desinstalar SSL Tunnel"
+echo " [1] ➮ Reinstall SSL Tunnel"
+echo " [2] ➮ Restart Services"
+echo " [3] ➮ View Status"
+echo " [4] ➮ Uninstall SSL Tunnel"
 echo
-echo " [0] ➮ Regresar"
+echo " [0] ➮ Return"
 
 else
 
-echo " [1] ➮ Instalar SSL Tunnel"
+echo " [1] ➮ Install SSL Tunnel"
 echo
-echo " [0] ➮ Regresar"
+echo " [0] ➮ Return"
 
 fi
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
-read -rp " ► Opción: " opc
+read -rp " ► Option: " opc
 
 case "$opc" in
 
@@ -238,7 +238,7 @@ sleep 3
 if systemctl is-active --quiet haproxy; then
     restart_ssl_tunnel
 else
-    echo "❌ SSL Tunnel no está instalado."
+    echo "❌ SSL Tunnel is not installed."
     sleep 3
 fi
 
@@ -248,14 +248,14 @@ fi
 
 clear
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "        ESTADO DEL SERVICIO"
+echo "        SERVICE STATUS"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo
 
 ssl_tunnel_status
 
 echo
-read -n1 -r -p "Presione una tecla para continuar..."
+read -n1 -r -p "Press any key to continue..."
 ;;
 
 4)
@@ -264,7 +264,7 @@ if systemctl is-active --quiet haproxy; then
     remove_ssl_tunnel
     sleep 3
 else
-    echo "❌ SSL Tunnel no está instalado."
+    echo "❌ SSL Tunnel is not installed."
     sleep 3
 fi
 
@@ -279,7 +279,7 @@ exec bash "$BASE/protocols/menu.sh"
 *)
 
 echo
-echo "❌ Opción inválida."
+echo "❌ Option invalid."
 sleep 2
 ;;
 
@@ -451,11 +451,11 @@ EOF
 
     if haproxy -c -f /etc/haproxy/haproxy.cfg >/dev/null 2>&1; then
 
-        msg_ok "Configuration HAProxy creada correctamente."
+        msg_ok "Configuration HAProxy created successfully."
 
     else
 
-        msg_error "La configuration contiene errores."
+        msg_error "La configuration contiene errors."
 
         haproxy -c -f /etc/haproxy/haproxy.cfg
 
@@ -471,11 +471,11 @@ EOF
 
     if systemctl is-active --quiet haproxy; then
 
-        msg_ok "HAProxy iniciado correctamente."
+        msg_ok "HAProxy iniciado successfully."
 
     else
 
-        msg_error "HAProxy no pudo iniciar."
+        msg_error "HAProxy could not start."
 
     fi
 
@@ -703,11 +703,11 @@ systemctl restart ssh-ws-internal.service
 
 if systemctl is-active --quiet ssh-ws-internal.service; then
 
-    msg_ok "SSH WebSocket Internal iniciado correctamente."
+    msg_ok "SSH WebSocket Internal iniciado successfully."
 
 else
 
-    msg_error "No fue posible iniciar SSH WebSocket Internal."
+    msg_error "Could not start SSH WebSocket Internal."
 
 fi
 
@@ -715,7 +715,7 @@ fi
 install_ssl_tunnel() {
 
     line
-    msg_info "Iniciando installation del SSL Tunnel..."
+    msg_info "Starting installation of the SSL Tunnel..."
     line
 
     install_dependencies || return 1
@@ -734,7 +734,7 @@ ensure_haproxy_resilience
 
     if ! haproxy -c -f /etc/haproxy/haproxy.cfg >/dev/null 2>&1; then
 
-        msg_error "La configuration de HAProxy es inválida."
+        msg_error "La configuration of HAProxy es invalid."
 
         haproxy -c -f /etc/haproxy/haproxy.cfg
 
@@ -747,8 +747,8 @@ ensure_haproxy_resilience
     systemctl enable haproxy >/dev/null 2>&1
 
     if systemctl restart haproxy; then
-    
-# Actualizar configuration
+
+# Update configuration
     grep -q "^SSL=" "$CONFIG" \
     && sed -i 's/^SSL=.*/SSL=ON/' "$CONFIG" \
     || echo "SSL=ON" >> "$CONFIG"
@@ -756,12 +756,12 @@ ensure_haproxy_resilience
 grep -q "^SSL_TUNNEL=" "$CONFIG" \
     && sed -i 's/^SSL_TUNNEL=.*/SSL_TUNNEL=ON/' "$CONFIG" \
     || echo "SSL_TUNNEL=ON" >> "$CONFIG"
-    
-        msg_ok "HAProxy iniciado correctamente."
+
+        msg_ok "HAProxy iniciado successfully."
 
     else
 
-        msg_error "No fue posible iniciar HAProxy."
+        msg_error "Could not start HAProxy."
 
         return 1
 
@@ -774,20 +774,20 @@ grep -q "^SSL_TUNNEL=" "$CONFIG" \
     line
 
     if systemctl is-active --quiet haproxy; then
-        echo -e "${GREEN}HAProxy:${RESET} ACTIVO"
+        echo -e "${GREEN}HAProxy:${RESET} ACTIVE"
     else
-        echo -e "${RED}HAProxy:${RESET} DETENIDO"
+        echo -e "${RED}HAProxy:${RESET} STOPPED"
     fi
 
     if systemctl is-active --quiet ssh-ws-internal.service; then
-        echo -e "${GREEN}SSH WS Internal:${RESET} ACTIVO"
+        echo -e "${GREEN}SSH WS Internal:${RESET} ACTIVE"
     else
-        echo -e "${RED}SSH WS Internal:${RESET} DETENIDO"
+        echo -e "${RED}SSH WS Internal:${RESET} STOPPED"
     fi
 
     line
 
-    msg_ok "SSL Tunnel instalado correctamente."
+    msg_ok "SSL Tunnel installed successfully."
 
 }
 ensure_haproxy_resilience() {
@@ -795,7 +795,7 @@ ensure_haproxy_resilience() {
     local DIR="/etc/systemd/system/haproxy.service.d"
     local OVERRIDE="${DIR}/10-resilience.conf"
 
-    # Si ya existe el override, no volver a crearlo
+    # If the override already exists, do not create it again
     if [[ -f "$OVERRIDE" ]]; then
         return 0
     fi
@@ -816,7 +816,7 @@ EOF
 
     systemctl daemon-reload
 
-    msg_ok "Resiliencia de HAProxy configurada."
+    msg_ok "Resiliencia of HAProxy configured."
 
 }
 ensure_haproxy_running() {
@@ -825,13 +825,13 @@ ensure_haproxy_running() {
     [[ -f /etc/haproxy/haproxy.cfg ]] || return
     [[ -f /etc/haproxy/yha.pem ]] || return
 
-    # Recrear directorio del socket
+    # Recreate directory of the socket
     mkdir -p /run/haproxy
 
     # Aplicar resiliencia
     ensure_haproxy_resilience
 
-    # Verificar servicio interno
+    # Verificar service interno
     if ! systemctl is-active --quiet ssh-ws-internal.service; then
 
         if [[ -f /etc/systemd/system/ssh-ws-internal.service ]]; then
@@ -846,7 +846,7 @@ ensure_haproxy_running() {
 
     fi
 
-    # Si HAProxy ya está activo no hacer nada
+    # If HAProxy ya is active do nothing
     if systemctl is-active --quiet haproxy; then
 
         return
@@ -855,7 +855,7 @@ ensure_haproxy_running() {
 
     msg_info "Recuperando HAProxy..."
 
-    # Liberar puertos
+    # Liberar ports
     fuser -k 80/tcp >/dev/null 2>&1 || true
     fuser -k 443/tcp >/dev/null 2>&1 || true
     fuser -k 8080/tcp >/dev/null 2>&1 || true
@@ -866,24 +866,24 @@ ensure_haproxy_running() {
 
     if systemctl is-active --quiet haproxy; then
 
-        msg_ok "HAProxy recuperado correctamente."
+        msg_ok "HAProxy recuperado successfully."
 
     else
 
-        msg_error "No fue posible iniciar HAProxy."
+        msg_error "Could not start HAProxy."
 
     fi
 
 }
 #==================================================
-# MODO AUTOMÁTICO
+# AUTOMATIC MODE
 #==================================================
 
 if [[ "$1" == "--auto" ]]; then
-    echo "🚀 Installing SSL Tunnel automáticamente..."
+    echo "🚀 Installing SSL Tunnel automatically..."
 
     if install_ssl_tunnel; then
-        echo "✅ SSL Tunnel instalado correctamente."
+        echo "✅ SSL Tunnel installed successfully."
         exit 0
     else
         echo "❌ Error installing SSL Tunnel."
@@ -891,7 +891,7 @@ if [[ "$1" == "--auto" ]]; then
     fi
 fi
 #==================================================
-# INICIAR MENÚ
+# INICIAR MENU
 #==================================================
 
 ssl_tunnel_menu

@@ -4,7 +4,7 @@ BASE="/etc/orx-tunnel"
 CONFIG="$BASE/config.conf"
 
 [[ ! -f "$CONFIG" ]] && {
-    echo "❌ No existe configuration ORX Tunnel"
+    echo "❌ Does not exist configuration ORX Tunnel"
     exit 1
 }
 
@@ -26,9 +26,9 @@ CONFIG_UDP="/usr/bin/config.json"
 set_udp_status(){
 
 if systemctl is-active --quiet "$SERVICE"; then
-    STATUS="${GREEN}🟢 ACTIVO${RESET}"
+    STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
-    STATUS="${RED}🔴 DETENIDO${RESET}"
+    STATUS="${RED}🔴 STOPPED${RESET}"
 fi
 
 }
@@ -70,21 +70,21 @@ URL="https://github.com/Depwisescript/UDP/raw/main/udp-custom-linux-arm"
 ;;
 
 *)
-echo "❌ Arquitectura no soportada: $ARCH"
+echo "❌ Unsupported architecture: $ARCH"
 return
 ;;
 
 esac
 
 
-echo "⬇️ Descargando UDP..."
+echo "⬇️ Downloading UDP..."
 
 curl -L -s -f "$URL" -o "$BIN"
 
 
 if [[ ! -f "$BIN" ]]; then
 
-echo "❌ Error descargando UDP"
+echo "❌ Error downloading UDP"
 
 return
 
@@ -95,7 +95,7 @@ chmod +x "$BIN"
 
 
 
-echo "📝 Creando configuration..."
+echo "📝 Creating configuration..."
 
 cat > "$CONFIG_UDP" <<EOF
 {
@@ -110,7 +110,7 @@ EOF
 
 
 
-echo "⚙️ Creando servicio..."
+echo "⚙️ Creating service..."
 
 
 cat > /etc/systemd/system/$SERVICE.service <<EOF
@@ -146,12 +146,12 @@ echo "UDP_CUSTOM=ON" >> "$CONFIG"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "✅ UDP CUSTOM INSTALADO"
-echo "Puerto: $PORT"
+echo "Port: $PORT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 else
 
-echo "❌ UDP no inició"
+echo "❌ UDP did not start"
 journalctl -u "$SERVICE" --no-pager -n 20
 
 fi
@@ -165,11 +165,11 @@ remove_udp(){
 clear
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "       🗑️ ELIMINAR UDP CUSTOM"
+echo "       🗑️ DELETE UDP CUSTOM"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 
-read -rp "¿Eliminar UDP Custom? (s/n): " CONFIRM
+read -rp "Delete UDP Custom? (s/n): " CONFIRM
 
 
 if [[ ! "$CONFIRM" =~ ^[Ss]$ ]]; then
@@ -182,7 +182,7 @@ fi
 
 
 
-echo "⏳ Deteniendo servicio..."
+echo "⏳ Deteniendo service..."
 
 
 systemctl stop "$SERVICE" 2>/dev/null
@@ -191,7 +191,7 @@ systemctl disable "$SERVICE" 2>/dev/null
 
 
 
-echo "🧹 Eliminando archivos..."
+echo "🧹 Deletendo files..."
 
 
 rm -f "/etc/systemd/system/$SERVICE.service"
@@ -262,7 +262,7 @@ restart_udp(){
 clear
 
 
-echo "🔄 Reiniciando UDP Custom..."
+echo "🔄 Restarting UDP Custom..."
 
 
 systemctl restart "$SERVICE"
@@ -275,11 +275,11 @@ sleep 2
 
 if systemctl is-active --quiet "$SERVICE"; then
 
-echo "✅ Servicio activo"
+echo "✅ Service active"
 
 else
 
-echo "❌ No pudo iniciar"
+echo "❌ No could start"
 
 journalctl -u "$SERVICE" --no-pager -n 15
 
@@ -300,7 +300,7 @@ clear
 
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "       📊 ESTADO UDP CUSTOM"
+echo "       📊 STATUS UDP CUSTOM"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 
@@ -313,7 +313,7 @@ systemctl status "$SERVICE" --no-pager
 
 echo ""
 
-echo "Puerto interno: $PORT"
+echo "Port interno: $PORT"
 
 
 echo ""
@@ -327,20 +327,20 @@ ss -ulnp | grep ":$PORT"
 
 echo ""
 
-read -n1 -r -p "Presiona una tecla para continuar..."
+read -n1 -r -p "Presiona a tecla to continue..."
 
 }
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━#
-#               MODO AUTOMÁTICO                #
+#               AUTOMATIC MODE                #
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━#
 
 if [[ "$1" == "--auto" ]]; then
-    echo "🚀 Installing UDP Custom automáticamente..."
+    echo "🚀 Installing UDP Custom automatically..."
 
     install_udp
 
     if systemctl is-active --quiet "$SERVICE"; then
-        echo "✅ UDP Custom instalado correctamente."
+        echo "✅ UDP Custom installed successfully."
         exit 0
     else
         echo "❌ Error installing UDP Custom."
@@ -364,9 +364,9 @@ echo -e "${WHITE}             🚀 UDP CUSTOM MANAGER${RESET}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 
-echo -e " Estado   : $STATUS"
-echo -e " Puerto   : $PORT"
-echo -e " Servicio : udp-custom"
+echo -e " Status   : $STATUS"
+echo -e " Port   : $PORT"
+echo -e " Service : udp-custom"
 
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -377,11 +377,11 @@ if [[ "$UDP_CUSTOM" == "ON" ]]; then
 
 cat <<EOF
 
- [1] ➮ Desinstalar UDP Custom
- [2] ➮ Reiniciar Servicio
- [3] ➮ Ver Estado
+ [1] ➮ Uninstall UDP Custom
+ [2] ➮ Restart Service
+ [3] ➮ View Status
 
- [0] ➮ Regresar
+ [0] ➮ Return
 
 EOF
 
@@ -391,9 +391,9 @@ else
 
 cat <<EOF
 
- [1] ➮ Instalar UDP Custom
+ [1] ➮ Install UDP Custom
 
- [0] ➮ Regresar
+ [0] ➮ Return
 
 EOF
 
@@ -405,7 +405,7 @@ fi
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 
-read -rp " ► Opción: " OP
+read -rp " ► Option: " OP
 
 
 
@@ -438,7 +438,7 @@ restart_udp
 
 else
 
-echo "❌ UDP Custom no está instalado"
+echo "❌ UDP Custom is not installed"
 
 sleep 2
 
@@ -457,7 +457,7 @@ status_udp
 
 else
 
-echo "❌ UDP Custom no está instalado"
+echo "❌ UDP Custom is not installed"
 
 sleep 2
 
@@ -478,7 +478,7 @@ else
 
 clear
 
-echo "❌ Menú principal no encontrado"
+echo "❌ Menu principal not found"
 
 sleep 2
 
@@ -492,7 +492,7 @@ fi
 
 *)
 
-echo "❌ Opción inválida"
+echo "❌ Option invalid"
 
 sleep 2
 

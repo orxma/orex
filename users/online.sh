@@ -1,7 +1,7 @@
 #!/bin/bash
 #==================================================
 # ORX Tunnel Multi Script
-# Usuarios SSH Online v2
+# Users SSH Online v2
 #==================================================
 
 GREEN="\e[1;92m"
@@ -16,11 +16,11 @@ RESET="\e[0m"
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}              👁 USUARIOS ONLINE 👁              ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}              👁 ONLINE USERS 👁              ${CYAN}║${RESET}"
 echo -e "${CYAN}╠════╦════════════════════╦═══════════════════════╣${RESET}"
 
 printf "${CYAN}║${WHITE} %-2s ${CYAN}║ ${WHITE}%-18s ${CYAN}║ ${WHITE}%-21s${CYAN}║${RESET}\n" \
-"ID" "USUARIO" "CONEXIONES"
+"ID" "USER" "CONNECTIONS"
 
 echo -e "${CYAN}╠════╬════════════════════╬═══════════════════════╣${RESET}"
 
@@ -29,7 +29,7 @@ ID=1
 
 declare -A USERS
 #==================================================
-# CONTAR USUARIOS SSH CONECTADOS
+# CONTAR USERS SSH CONECTADOS
 #==================================================
 
 while read -r USER; do
@@ -51,7 +51,7 @@ awk '{print $1}'
 
 )
 #==================================================
-# MOSTRAR USUARIOS
+# MOSTRAR USERS
 #==================================================
 
 for USER in $(printf "%s\n" "${!USERS[@]}" | sort); do
@@ -68,14 +68,14 @@ done
 
 if [[ $TOTAL -eq 0 ]]; then
 
-    echo -e "${CYAN}║${RED} No hay usuarios conectados.                  ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RED} There are no users connected.                  ${CYAN}║${RESET}"
 
 fi
 
 echo -e "${CYAN}╠════╩════════════════════╩═══════════════════════╣${RESET}"
-echo -e "${WHITE} Usuarios Online : ${GREEN}$TOTAL${RESET}"
-echo -e "${WHITE} Actualizado     : ${GREEN}$(date '+%d/%m/%Y %H:%M:%S')${RESET}"
+echo -e "${WHITE} Users Online : ${GREEN}$TOTAL${RESET}"
+echo -e "${WHITE} Updated     : ${GREEN}$(date '+%d/%m/%Y %H:%M:%S')${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 
 echo
-read -n1 -s -r -p "Presione cualquier tecla para regresar..."
+read -n1 -s -r -p "Press any key to return..."

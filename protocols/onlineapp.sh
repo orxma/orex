@@ -14,13 +14,13 @@ echo
 
 if pgrep -f "$ONLINEAPP" >/dev/null; then
 
-    echo "Estado: 🟢 ACTIVO"
+    echo "Status: 🟢 ACTIVE"
     echo
     echo "URL:"
     echo "http://$IP:8888/server/online"
     echo "http://$IP:8888/server/online_app"
     echo
-    read -rp "¿Desea detener la Online App? [S/N]: " OP
+    read -rp "Stop la Online App? [Y/N]: " OP
 
     if [[ "$OP" =~ ^[Ss]$ ]]; then
         pkill -f "$ONLINEAPP"
@@ -32,9 +32,9 @@ if pgrep -f "$ONLINEAPP" >/dev/null; then
 
 else
 
-    echo "Estado: 🔴 DETENIDO"
+    echo "Status: 🔴 STOPPED"
     echo
-    read -rp "¿Desea iniciar la Online App? [S/N]: " OP
+    read -rp "Start la Online App? [Y/N]: " OP
 
     if [[ "$OP" =~ ^[Ss]$ ]]; then
 
@@ -60,12 +60,12 @@ else
             echo "http://$IP:8888/server/online_app"
         else
             echo
-            echo "✗ Error: Online App no pudo iniciarse."
+            echo "✗ Error: Online App could not start."
         fi
     fi
 
 fi
 
 echo
-read -n1 -s -r -p "Presione una tecla para volver..."
+read -n1 -s -r -p "Press any key to return..."
 exec bash "$BASE/protocols/checkuser.sh"

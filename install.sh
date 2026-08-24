@@ -47,18 +47,18 @@ BASE_URL="https://sc.orx.ma"
 MANIFEST_URL="${BASE_URL}/manifest.txt"
 
 #=========================================================
-# API DE LICENCIAS
+# API LICENSE
 # IMPORTANTE:
 # NO SE MUESTRA EN PANTALLA
 #=========================================================
 
 LICENSE_API="https://usa.socialstreaming.xyz"
 
-# Bot visible para el usuario
+# Bot visible to el user
 LICENSE_BOT="@aytou0"
 
 #=========================================================
-# CONFIGURACIÓN
+# CONFIGURATION
 #=========================================================
 
 INSTALL_PROTOCOLS="ON"
@@ -174,7 +174,7 @@ error_exit() {
 
     echo
     echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${RED}║${RESET} ${WHITE}${BOLD}❌ INSTALACIÓN DETENIDA${RESET}"
+    echo -e "${RED}║${RESET} ${WHITE}${BOLD}❌ INSTALLATION DETENIDA${RESET}"
     echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
     echo -e " ${RED}✖${RESET} ${WHITE}$1${RESET}"
@@ -211,13 +211,13 @@ fi
 #=========================================================
 
 if [[ ! -f /etc/os-release ]]; then
-    error_exit "No se pudo detectar el sistema operativo."
+    error_exit "Could not detectar the system operativo."
 fi
 
 source /etc/os-release
 
 if [[ "$ID" != "ubuntu" ]]; then
-    error_exit "Este instalador solamente es compatible con Ubuntu."
+    error_exit "Este installedr solamente es compatible with Ubuntu."
 fi
 
 #=========================================================
@@ -228,9 +228,9 @@ titulo
 
 echo -e "${GREEN}             ● SISTEMA COMPATIBLE DETECTADO ●${RESET}"
 echo
-echo -e "${WHITE}Sistema : ${SKY}${PRETTY_NAME}${RESET}"
-echo -e "${WHITE}Usuario : ${GOLD}root${RESET}"
-echo -e "${WHITE}Licencia: ${MAGENTA}ORX Tunnel License System${RESET}"
+echo -e "${WHITE}System : ${SKY}${PRETTY_NAME}${RESET}"
+echo -e "${WHITE}User : ${GOLD}root${RESET}"
+echo -e "${WHITE}License: ${MAGENTA}ORX Tunnel License System${RESET}"
 echo
 linea_color
 
@@ -241,19 +241,19 @@ linea_color
 
 seccion "📦 PASO 0  •  PREPARANDO EL SISTEMA"
 
-echo -e "${GRAY}Inicializando componentes necesarios...${RESET}"
+echo -e "${GRAY}Inicializando componentes requireds...${RESET}"
 echo
 
-loading "Actualizando repositorios"
+loading "Updating repositories"
 
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get update -y >/dev/null 2>&1 || \
-    error_exit "No se pudieron actualizar los repositorios."
+    error_exit "Could not update the repositories."
 
-ok "Repositorios actualizados."
+ok "Repositorios updated."
 
-loading "Installing dependencias"
+loading "Installing dependencies"
 
 apt-get install -y \
     curl \
@@ -265,26 +265,26 @@ apt-get install -y \
     sudo \
     openssl \
     >/dev/null 2>&1 || \
-    error_exit "No se pudieron instalar las dependencias."
+    error_exit "Could not install the dependencies."
 
 update-ca-certificates >/dev/null 2>&1 || true
 
-ok "Dependencias instaladas."
+ok "Dependencias installeds."
 echo
 
 #=========================================================
 # VERIFICAR API
 #=========================================================
 
-seccion "🔐 SISTEMA DE LICENCIAS"
+seccion "🔐 SISTEMA LICENSE"
 
-echo -e "${WHITE}Obtén tu Key mediante nuestro bot oficial:${RESET}"
+echo -e "${WHITE}Get your key from our official bot:${RESET}"
 echo
 echo -e " ${CYAN}🤖 Telegram:${RESET} ${PINK}${BOLD}${LICENSE_BOT}${RESET}"
 echo
-echo -e "${GRAY}La validación se realiza automáticamente.${RESET}"
+echo -e "${GRAY}Validation is performed automatically.${RESET}"
 echo
-loading "Comprobando sistema de licencias"
+loading "Checking system of the license"
 
 HEALTH_RESPONSE="$(
     curl \
@@ -311,9 +311,9 @@ HEALTH_BODY="$(
 if [[ "$HEALTH_HTTP" != "200" ]]; then
 
     echo
-    fail "Servidor de licencias no disponible."
+    fail "Server of the license not available."
     echo
-    echo -e "${GRAY}Inténtalo nuevamente más tarde.${RESET}"
+    echo -e "${GRAY}Try again later.${RESET}"
     echo
 
     exit 1
@@ -323,22 +323,22 @@ fi
 if ! echo "$HEALTH_BODY" |
     jq -e '.ok == true' >/dev/null 2>&1; then
 
-    error_exit "El sistema de licencias no está disponible."
+    error_exit "The system of the license is not available."
 
 fi
 
-ok "Sistema de licencias operativo."
+ok "System of the license operativo."
 
 #=========================================================
 # PASO 1
-# LICENCIA
+# LICENSE
 #=========================================================
 
-seccion "🔑 PASO 1  •  VALIDACIÓN DE LICENCIA"
+seccion "🔑 PASO 1  •  VALIDATION DE LICENSE"
 
-echo -e "${WHITE}Ingresa la Key proporcionada por ORX Tunnel.${RESET}"
+echo -e "${WHITE}Ingresa the key proporcionada by ORX Tunnel.${RESET}"
 echo
-echo -e "${GRAY}¿No tienes una Key?${RESET}"
+echo -e "${GRAY}No tienes a Key?${RESET}"
 echo -e " ${CYAN}🤖 Telegram:${RESET} ${PINK}${BOLD}${LICENSE_BOT}${RESET}"
 echo
 
@@ -346,11 +346,11 @@ while true; do
 
     if [[ -z "${INSTALL_KEY:-}" ]]; then
 
-        read -r -p "$(echo -e "${GOLD}🔑 Key de Installation:${RESET} ")" INSTALL_KEY
+        read -r -p "$(echo -e "${GOLD}🔑 Installation key:${RESET} ")" INSTALL_KEY
 
     else
 
-        echo -e "${GOLD}🔑 Key de Installation:${RESET} ${INSTALL_KEY}"
+        echo -e "${GOLD}🔑 Installation key:${RESET} ${INSTALL_KEY}"
 
     fi
 
@@ -362,7 +362,7 @@ while true; do
     if [[ -z "$INSTALL_KEY" ]]; then
 
         echo
-        fail "La Key no puede estar vacía."
+        fail "The key cannot estar empty."
         echo
 
         continue
@@ -370,7 +370,7 @@ while true; do
     fi
 
     echo
-    loading "Verificando licencia"
+    loading "Verifying license"
 
     REQUEST_JSON="$(
         jq -n \
@@ -408,7 +408,7 @@ while true; do
     if [[ "$CURL_STATUS" -ne 0 ]]; then
 
         echo
-        fail "No fue posible conectar con el sistema de licencias."
+        fail "Could not connect with the system of the license."
         echo
         pausa 2
         continue
@@ -419,7 +419,7 @@ while true; do
         jq empty >/dev/null 2>&1; then
 
         echo
-        fail "El servidor devolvió una respuesta inválida."
+        fail "The server returned an invalid response."
         echo
         pausa 2
         continue
@@ -456,22 +456,22 @@ while true; do
 
             key_expired)
                 echo -e "${YELLOW}╭──────────────────────────────────────────────╮${RESET}"
-                echo -e "${YELLOW}│${RESET} ${WHITE}⚠ KEY EXPIRADA${RESET}"
+                echo -e "${YELLOW}│${RESET} ${WHITE}⚠ KEY EXPIRESDA${RESET}"
                 echo -e "${YELLOW}╰──────────────────────────────────────────────╯${RESET}"
                 ;;
 
             key_required)
-                fail "No se recibió una Key."
+                fail "No ... received a Key."
                 ;;
 
             *)
-                fail "La Key no es válida."
+                fail "The key is not valid."
                 ;;
 
         esac
 
         echo
-        echo -e "${GRAY}No se instalará ningún archivo.${RESET}"
+        echo -e "${GRAY}No files will be installed.${RESET}"
         echo
 
         pausa 2
@@ -480,7 +480,7 @@ while true; do
     fi
 
     #=====================================================
-    # DATOS DE LICENCIA
+    # DATOS DE LICENSE
     #=====================================================
 
     LICENSE_OWNER="$(
@@ -505,7 +505,7 @@ while true; do
 
     echo
     echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}                 ✅ LICENCIA VÁLIDA${RESET}                  ${GREEN}║${RESET}"
+    echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}                 ✅ VALID LICENSE${RESET}                  ${GREEN}║${RESET}"
     echo -e "${GREEN}╠══════════════════════════════════════════════════════════════╣${RESET}"
     echo -e "${GREEN}║${RESET} ${GRAY}Propietario:${RESET} ${WHITE}${LICENSE_OWNER}${RESET}"
     echo -e "${GREEN}║${RESET} ${GRAY}Revendedor :${RESET} ${WHITE}${LICENSE_RESELLER}${RESET}"
@@ -514,14 +514,14 @@ while true; do
     if [[ -n "$LICENSE_DELETE_AT" &&
           "$LICENSE_DELETE_AT" != "null" ]]; then
 
-        echo -e "${GREEN}║${RESET} ${GRAY}Expira     :${RESET} ${YELLOW}${LICENSE_DELETE_AT}${RESET}"
+        echo -e "${GREEN}║${RESET} ${GRAY}Expires     :${RESET} ${YELLOW}${LICENSE_DELETE_AT}${RESET}"
 
     fi
 
     echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
 
-    ok "Licencia aceptada."
+    ok "License aceptada."
     echo
 
     break
@@ -533,15 +533,15 @@ done
 # SISTEMA
 #=========================================================
 
-seccion "⚙️ PASO 2  •  PREPARANDO SERVIDOR"
+seccion "⚙️ PASO 2  •  PREPARANDO SERVER"
 
-echo -e "${GRAY}Configurando componentes principales del VPS.${RESET}"
+echo -e "${GRAY}Configurando componentes principales of the VPS.${RESET}"
 echo
 
-loading "Actualizando paquetes"
+loading "Updating paquetes"
 
 apt-get update -y >/dev/null 2>&1 || \
-    error_exit "Error actualizando repositorios."
+    error_exit "Error updating repositories."
 
 loading "Installing componentes"
 
@@ -568,9 +568,9 @@ apt-get install -y \
     ufw \
     fail2ban \
     >/dev/null 2>&1 || \
-    error_exit "No se pudieron instalar todos los paquetes."
+    error_exit "Could not install todos los paquetes."
 
-ok "Componentes instalados."
+ok "Componentes installeds."
 
 #=========================================================
 # OPENSSH
@@ -582,16 +582,16 @@ info "Configurando OpenSSH..."
 systemctl enable ssh >/dev/null 2>&1 || true
 
 systemctl restart ssh >/dev/null 2>&1 || \
-    error_exit "No se pudo iniciar OpenSSH."
+    error_exit "Could not start OpenSSH."
 
-ok "OpenSSH activo."
+ok "OpenSSH active."
 
 #=========================================================
 # FIREWALL
 #=========================================================
 
 echo
-info "Configurando firewall..."
+info "Configuring firewall..."
 
 ufw --force reset >/dev/null 2>&1 || true
 
@@ -604,14 +604,14 @@ ufw allow 443/tcp >/dev/null 2>&1
 
 ufw --force enable >/dev/null 2>&1 || true
 
-ok "Firewall configurado."
+ok "Firewall configured."
 
 #=========================================================
 # SSH HARDENING
 #=========================================================
 
 echo
-info "Aplicando seguridad SSH..."
+info "Aplicando security SSH..."
 
 SSHD_CFG="/etc/ssh/sshd_config"
 
@@ -647,11 +647,11 @@ if sshd -t >/dev/null 2>&1; then
 
     systemctl restart ssh
 
-    ok "Configuration SSH válida."
+    ok "Configuration SSH valid."
 
 else
 
-    fail "Error en la configuration SSH."
+    fail "Error en the configuration SSH."
 
     if [[ -f "${SSHD_CFG}.orx-tunnel.backup" ]]; then
 
@@ -691,16 +691,16 @@ EOF
 systemctl enable fail2ban >/dev/null 2>&1 || true
 systemctl restart fail2ban >/dev/null 2>&1 || true
 
-ok "Fail2Ban configurado."
+ok "Fail2Ban configured."
 
 #=========================================================
 # PASO 3
 # DOMINIO
 #=========================================================
 
-seccion "🌐 PASO 3  •  CONFIGURACIÓN DE DOMINIO"
+seccion "🌐 PASO 3  •  CONFIGURATION DE DOMINIO"
 
-read -r -p "$(echo -e "${CYAN}🌐 Dominio del VPS:${RESET} ")" SERVER_DOMAIN
+read -r -p "$(echo -e "${CYAN}🌐 Domain of the VPS:${RESET} ")" SERVER_DOMAIN
 
 SERVER_DOMAIN="$(
     printf '%s' "$SERVER_DOMAIN" |
@@ -728,7 +728,7 @@ DNS_PROVIDER="Desconocido"
 if [[ -n "$SERVER_DOMAIN" ]]; then
 
     echo
-    loading "Comprobando DNS"
+    loading "Checking DNS"
 
     DOMAIN_IP="$(
         dig +short A "$SERVER_DOMAIN" |
@@ -741,16 +741,16 @@ if [[ -n "$SERVER_DOMAIN" ]]; then
 
         DOMAIN_IP_MATCH="YES"
 
-        ok "El dominio apunta correctamente al VPS."
+        ok "The domain apunta successfully al VPS."
 
     else
 
-        warn "El dominio todavía no apunta a este VPS."
+        warn "The domain does not point to this VPS yet."
 
         if [[ -n "$DOMAIN_IP" ]]; then
 
             echo -e " ${GRAY}IP encontrada:${RESET} ${YELLOW}$DOMAIN_IP${RESET}"
-            echo -e " ${GRAY}IP del VPS:   ${RESET} ${CYAN}$SERVER_IP${RESET}"
+            echo -e " ${GRAY}IP of the VPS:   ${RESET} ${CYAN}$SERVER_IP${RESET}"
 
         fi
 
@@ -788,24 +788,24 @@ if [[ -n "$SERVER_DOMAIN" ]]; then
 
 else
 
-    warn "No se introdujo ningún dominio."
+    warn "No domain was entered."
 
 fi
 
 #=========================================================
 # PASO 4
-# DESCARGAR SISTEMA
+# DOWNLOAD SISTEMA
 #=========================================================
 
 seccion "📥 PASO 4  •  INSTALANDO ORX TUNNEL"
 
-echo -e "${GRAY}Descargando los componentes oficiales del sistema.${RESET}"
+echo -e "${GRAY}Downloading los componentes oficiales dthe system.${RESET}"
 echo
 
 rm -rf "$TMP"
 mkdir -p "$TMP"
 
-loading "Downloading ORX Tunnel files"
+loading "Downloading ORX Tunnthe files"
 
 if ! curl -fsSL --max-time 30 "$MANIFEST_URL" -o "$TMP/manifest.txt"; then
     rm -rf "$TMP"
@@ -821,14 +821,14 @@ while IFS= read -r FILE || [[ -n "$FILE" ]]; do
     fi
 done < "$TMP/manifest.txt"
 
-ok "Archivos descargados."
+ok "Files desloaddos."
 
 #=========================================================
 # BACKUPS
 #=========================================================
 
 echo
-info "Creando copias de seguridad..."
+info "Creating copias of security..."
 
 if [[ -f "$BASE/config.conf" ]]; then
     cp "$BASE/config.conf" "$BASE/config.conf.orx-tunnel.backup"
@@ -841,7 +841,7 @@ fi
 ok "Backups preparados."
 
 #=========================================================
-# INSTALAR ARCHIVOS
+# INSTALL FILES
 #=========================================================
 
 mkdir -p "$BASE"
@@ -850,22 +850,22 @@ cp -a "$TMP"/. "$BASE"/ || {
 
     rm -rf "$TMP"
 
-    error_exit "No se pudieron copiar los archivos."
+    error_exit "Could not copy los files."
 
 }
 
 rm -rf "$TMP"
 
 mkdir -p \
-    "$BASE/protocolos" \
-    "$BASE/usuarios" \
-    "$BASE/sistema" \
+    "$BASE/protocols" \
+    "$BASE/users" \
+    "$BASE/system" \
     "$BASE/logs"
 
-ok "Archivos instalados."
+ok "Files installeds."
 
 #=========================================================
-# CONFIGURACIÓN
+# CONFIGURATION
 #=========================================================
 
 cat > "$BASE/config.conf" <<EOF
@@ -886,7 +886,7 @@ PROXY_STATUS="$PROXY_STATUS"
 AUTO_START=OFF
 
 #=========================================================
-# LICENCIA
+# LICENSE
 #=========================================================
 
 LICENSE_API="$LICENSE_API"
@@ -896,7 +896,7 @@ LICENSE_TYPE="$LICENSE_TYPE"
 LICENSE_DELETE_AT="$LICENSE_DELETE_AT"
 
 #=========================================================
-# PROTOCOLOS
+# PROTOCOLS
 #=========================================================
 
 OPENSSH=ON
@@ -949,7 +949,7 @@ chmod 600 "$BASE/license.conf"
 chmod -R 755 "$BASE"
 chmod 600 "$BASE/license.conf"
 
-ok "Permisos configurados."
+ok "Permisos configureds."
 
 #=========================================================
 # COMANDO MENU
@@ -961,14 +961,14 @@ cat > /usr/local/bin/menu <<'EOF'
 if [[ -f /etc/orx-tunnel/menu.sh ]]; then
     exec bash /etc/orx-tunnel/menu.sh "$@"
 else
-    echo "❌ No se encontró /etc/orx-tunnel/menu.sh"
+    echo "❌ Not found /etc/orx-tunnel/menu.sh"
     exit 1
 fi
 EOF
 
 chmod +x /usr/local/bin/menu
 
-ok "Comando 'menu' instalado."
+ok "Comando 'menu' installed."
 
 #=========================================================
 # PASO 5
@@ -977,10 +977,10 @@ ok "Comando 'menu' instalado."
 
 seccion "👑 PASO 5  •  ACCESO ROOT"
 
-echo -e "${WHITE}Puedes establecer una contraseña para root.${RESET}"
+echo -e "${WHITE}You can establecer a password to root.${RESET}"
 echo
-echo -e "${GREEN}Y${RESET} = Establecer contraseña root"
-echo -e "${RED}N${RESET} = Continuar sin modificar"
+echo -e "${GREEN}Y${RESET} = Establecer password root"
+echo -e "${RED}N${RESET} = Continue sin modificar"
 echo
 
 read -r -p "$(echo -e "${GOLD}[Y/N]:${RESET} ")" ROOT_ACCESS
@@ -993,7 +993,7 @@ ROOT_ACCESS="$(
 if [[ "$ROOT_ACCESS" == "y" ]]; then
 
     echo
-    echo -e "${YELLOW}Introduce la nueva contraseña de root:${RESET}"
+    echo -e "${YELLOW}Enter the new password of root:${RESET}"
     echo
 
     if passwd root; then
@@ -1024,7 +1024,7 @@ EOF
 
             else
 
-                fail "La configuration SSH no es válida."
+                fail "La configuration SSH is not valid."
 
             fi
 
@@ -1032,7 +1032,7 @@ EOF
 
     else
 
-        fail "No se pudo cambiar la contraseña."
+        fail "Could not change the password."
 
     fi
 
@@ -1042,12 +1042,12 @@ fi
 
 #=========================================================
 # PASO 6
-# PROTOCOLOS
+# PROTOCOLS
 #=========================================================
 
-seccion "🚀 PASO 6  •  INSTALACIÓN DE PROTOCOLOS"
+seccion "🚀 PASO 6  •  PROTOCOL INSTALLATION"
 
-echo -e "${WHITE}Protocolos seleccionados para installation automática:${RESET}"
+echo -e "${WHITE}Protocols seleccionados to automatic installation:${RESET}"
 echo
 
 echo -e " ${CYAN}◆${RESET} ${WHITE}BadVPN${RESET}"
@@ -1066,70 +1066,70 @@ if [[ "$INSTALL_PROTOCOLS" == "ON" ]]; then
 
     echo
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}             INSTALANDO PROTOCOLOS${RESET}                    ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}             INSTALANDO PROTOCOLS${RESET}                    ${CYAN}║${RESET}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
 
-    instalar_protocolo() {
+    install_protocolo() {
 
         local NOMBRE="$1"
-        local ARCHIVO="$2"
+        local FILE="$2"
 
-        if [[ -f "$ARCHIVO" ]]; then
+        if [[ -f "$FILE" ]]; then
 
             echo
             echo -e "${PURPLE}┌──────────────────────────────────────────────────────────────┐${RESET}"
             echo -e "${PURPLE}│${RESET} ${WHITE}📦 $NOMBRE${RESET}"
             echo -e "${PURPLE}└──────────────────────────────────────────────────────────────┘${RESET}"
 
-            if bash "$ARCHIVO" --auto; then
+            if bash "$FILE" --auto; then
 
-                ok "$NOMBRE instalado correctamente."
+                ok "$NOMBRE installed successfully."
 
             else
 
-                warn "$NOMBRE terminó con errores."
+                warn "$NOMBRE finished with errors."
 
             fi
 
         else
 
-            warn "No existe el módulo de $NOMBRE."
-            echo -e " ${GRAY}$ARCHIVO${RESET}"
+            warn "The module of $NOMBRE."
+            echo -e " ${GRAY}$FILE${RESET}"
 
         fi
 
     }
 
-    instalar_protocolo \
+    install_protocolo \
         "BadVPN" \
         "$BASE/protocols/badvpn.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "SSL Tunnel" \
         "$BASE/protocols/ssl.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "ZIPVPN" \
         "$BASE/protocols/zipvpn.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "UDP Hysteria" \
         "$BASE/protocols/udphisteria.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "OpenVPN" \
         "$BASE/protocols/openvpn.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "V2Ray / Xray" \
         "$BASE/protocols/v2ray.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "Dropbear" \
         "$BASE/protocols/dropbear.sh"
 
-    instalar_protocolo \
+    install_protocolo \
         "UDP Custom" \
         "$BASE/protocols/udpcustom.sh"
 
@@ -1168,24 +1168,24 @@ echo -e "\e[1;96m╔════════════════════
 echo -e "\e[1;96m║\e[0m              \e[1;95m🚀 ORX TUNNEL MULTI SCRIPT 🚀\e[0m              \e[1;96m║\e[0m"
 echo -e "\e[1;96m╚══════════════════════════════════════════════════════════════╝\e[0m"
 echo
-echo -e " \e[1;97mServidor :\e[0m \e[1;96m$SERVER\e[0m"
-echo -e " \e[1;97mDominio  :\e[0m \e[1;95m$DOMAIN\e[0m"
+echo -e " \e[1;97mServer :\e[0m \e[1;96m$SERVER\e[0m"
+echo -e " \e[1;97mDomain  :\e[0m \e[1;95m$DOMAIN\e[0m"
 echo -e " \e[1;97mUptime   :\e[0m \e[1;92m$UPTIME\e[0m"
 echo -e " \e[1;97mFecha    :\e[0m \e[1;93m$FECHA\e[0m"
 echo -e " \e[1;97mHora     :\e[0m \e[1;94m$HORA\e[0m"
 echo
-echo -e " \e[1;96m🤖 Licencias:\e[0m \e[1;95m@aytou0\e[0m"
+echo -e " \e[1;96m🤖 Licenses:\e[0m \e[1;95m@aytou0\e[0m"
 echo -e "\e[1;96m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[0m"
 
 if [[ "$EUID" -ne 0 ]]; then
 
-    echo -e " 👤 Usuario : $(whoami)"
-    echo -e " 🔒 Estado  : No eres root"
+    echo -e " 👤 User : $(whoami)"
+    echo -e " 🔒 Status  : No eres root"
     echo -e " 👉 Ejecuta: \e[1;96msudo -i\e[0m"
 
 else
 
-    echo -e " 👑 Usuario : \e[1;92mroot\e[0m"
+    echo -e " 👑 User : \e[1;92mroot\e[0m"
     echo -e " 👉 Panel   : \e[1;96mmenu\e[0m"
 
 fi
@@ -1200,9 +1200,9 @@ chmod +x /etc/profile.d/orx-tunnel-banner.sh
 # ACTIVAR KEY
 #=========================================================
 
-seccion "🔐 REGISTRANDO INSTALACIÓN"
+seccion "🔐 REGISTERING INSTALLATION"
 
-echo -e "${GRAY}Registrando la activación de esta installation...${RESET}"
+echo -e "${GRAY}Registering activation of esta installation...${RESET}"
 echo
 
 CLIENT_IP="$(
@@ -1233,11 +1233,11 @@ DATE_NOW="$(
 
 echo -e " ${GRAY}IP:${RESET}       ${CYAN}$CLIENT_IP${RESET}"
 echo -e " ${GRAY}Hostname:${RESET} ${SKY}$HOSTNAME_VALUE${RESET}"
-echo -e " ${GRAY}Sistema:${RESET}  ${WHITE}$OS_NAME${RESET}"
+echo -e " ${GRAY}System:${RESET}  ${WHITE}$OS_NAME${RESET}"
 echo
 
 #=========================================================
-# JSON ACTIVACIÓN
+# JSON ACTIVATION
 #=========================================================
 
 ACTIVATION_JSON="$(
@@ -1256,7 +1256,7 @@ ACTIVATION_JSON="$(
         }'
 )"
 
-loading "Registrando licencia"
+loading "Registering license"
 
 ACTIVATE_RESPONSE="$(
     curl \
@@ -1288,9 +1288,9 @@ ACTIVATE_BODY="$(
 if [[ "$ACTIVATE_STATUS" -ne 0 ]]; then
 
     echo
-    fail "No se pudo conectar con el sistema de activación."
+    fail "Could not connect with the system of activation."
     echo
-    echo -e "${YELLOW}La licencia no fue marcada como utilizada.${RESET}"
+    echo -e "${YELLOW}The license was not marked as used.${RESET}"
     echo
     exit 1
 
@@ -1300,7 +1300,7 @@ if ! echo "$ACTIVATE_BODY" |
     jq empty >/dev/null 2>&1; then
 
     echo
-    fail "El sistema devolvió una respuesta inválida."
+    fail "The system returned an invalid response."
     echo
     exit 1
 
@@ -1319,11 +1319,11 @@ ACTIVATE_ERROR="$(
 if [[ "$ACTIVATE_OK" != "true" ]]; then
 
     echo
-    fail "No se pudo registrar la activación."
+    fail "Could not registrar la activation."
     echo
-    echo -e "${YELLOW}Código: ${ACTIVATE_ERROR:-desconocido}${RESET}"
+    echo -e "${YELLOW}Code: ${ACTIVATE_ERROR:-unknown}${RESET}"
     echo
-    echo -e "${RED}La installation no será declarada como completada.${RESET}"
+    echo -e "${RED}La installation will not be marked as complete.${RESET}"
     echo
 
     exit 1
@@ -1337,19 +1337,19 @@ ACTIVATION_ID="$(
 
 echo
 echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}              ✅ ACTIVACIÓN COMPLETADA${RESET}                ${GREEN}║${RESET}"
+echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}              ✅ ACTIVATION COMPLETED${RESET}                ${GREEN}║${RESET}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo
 
 if [[ -n "$ACTIVATION_ID" ]]; then
-    echo -e "${GRAY}ID de activación:${RESET} ${CYAN}${ACTIVATION_ID}${RESET}"
+    echo -e "${GRAY}ID of activation:${RESET} ${CYAN}${ACTIVATION_ID}${RESET}"
     echo
 fi
 
-ok "La Key fue marcada como utilizada."
+ok "The key was marked as used."
 
 #=========================================================
-# ESTADO LOCAL
+# STATUS LOCAL
 #=========================================================
 
 if [[ -f "$BASE/license.conf" ]]; then
@@ -1384,12 +1384,12 @@ rm -rf "$TMP"
 titulo
 
 echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}             🎉 INSTALACIÓN COMPLETADA 🎉${RESET}             ${GREEN}║${RESET}"
+echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}             🎉 INSTALLATION COMPLETED 🎉${RESET}             ${GREEN}║${RESET}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo
 
-echo -e " ${GREEN}●${RESET} ${WHITE}Servidor:${RESET} ${CYAN}LISTO${RESET}"
-echo -e " ${GREEN}●${RESET} ${WHITE}Licencia:${RESET} ${GREEN}ACTIVA${RESET}"
+echo -e " ${GREEN}●${RESET} ${WHITE}Server:${RESET} ${CYAN}LISTO${RESET}"
+echo -e " ${GREEN}●${RESET} ${WHITE}License:${RESET} ${GREEN}ACTIVA${RESET}"
 echo -e " ${GREEN}●${RESET} ${WHITE}Propietario:${RESET} ${WHITE}$LICENSE_OWNER${RESET}"
 echo -e " ${GREEN}●${RESET} ${WHITE}Revendedor:${RESET} ${WHITE}$LICENSE_RESELLER${RESET}"
 echo -e " ${GREEN}●${RESET} ${WHITE}Tipo:${RESET} ${CYAN}$LICENSE_TYPE${RESET}"
@@ -1397,9 +1397,9 @@ echo -e " ${GREEN}●${RESET} ${WHITE}Tipo:${RESET} ${CYAN}$LICENSE_TYPE${RESET}
 echo
 
 echo -e "${PURPLE}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${PURPLE}║${RESET} ${WHITE}${BOLD}                 INFORMACIÓN DEL VPS${RESET}                   ${PURPLE}║${RESET}"
+echo -e "${PURPLE}║${RESET} ${WHITE}${BOLD}                 VPS INFORMATION${RESET}                   ${PURPLE}║${RESET}"
 echo -e "${PURPLE}╠══════════════════════════════════════════════════════════════╣${RESET}"
-echo -e "${PURPLE}║${RESET} ${GRAY}Dominio:${RESET} ${SKY}${SERVER_DOMAIN:-No configurado}${RESET}"
+echo -e "${PURPLE}║${RESET} ${GRAY}Domain:${RESET} ${SKY}${SERVER_DOMAIN:-Not configured}${RESET}"
 echo -e "${PURPLE}║${RESET} ${GRAY}IP     :${RESET} ${CYAN}${SERVER_IP}${RESET}"
 echo -e "${PURPLE}║${RESET} ${GRAY}DNS    :${RESET} ${MAGENTA}${DNS_PROVIDER}${RESET}"
 echo -e "${PURPLE}╚══════════════════════════════════════════════════════════════╝${RESET}"
@@ -1407,17 +1407,17 @@ echo -e "${PURPLE}╚═══════════════════�
 echo
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}                 🔐 SOPORTE Y LICENCIAS${RESET}                ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}                 🔐 SOPORTE Y LICENSES${RESET}                ${CYAN}║${RESET}"
 echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${RESET}"
 echo -e "${CYAN}║${RESET} ${GRAY}Bot oficial:${RESET} ${PINK}${BOLD}${LICENSE_BOT}${RESET}"
 echo -e "${CYAN}║${RESET} ${GRAY}Panel      :${RESET} ${GREEN}menu${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 
 echo
-echo -e "${GOLD}🚀 ORX Tunnel Multi Script está listo.${RESET}"
+echo -e "${GOLD}🚀 ORX Tunnel Multi Script is ready.${RESET}"
 echo
 
-echo -e "${YELLOW}¿Reiniciar el servidor ahora? [Y/N]${RESET}"
+echo -e "${YELLOW}Restart the server now? [Y/N]${RESET}"
 
 read -r -p "$(echo -e "${CYAN}[Y/N]:${RESET} ")" REBOOT_SERVER
 
@@ -1429,7 +1429,7 @@ REBOOT_SERVER="$(
 if [[ "$REBOOT_SERVER" == "y" ]]; then
 
     echo
-    echo -e "${YELLOW}🔄 Reiniciando en 5 segundos...${RESET}"
+    echo -e "${YELLOW}🔄 Restarting en 5 segundos...${RESET}"
 
     for i in 5 4 3 2 1; do
         echo -ne "\r${CYAN}Reinicio en ${WHITE}${i}${CYAN}...${RESET}"
@@ -1442,9 +1442,9 @@ if [[ "$REBOOT_SERVER" == "y" ]]; then
 else
 
     echo
-    echo -e "${GREEN}✅ Installation finalizada sin reiniciar.${RESET}"
+    echo -e "${GREEN}✅ Installation completed sin restart.${RESET}"
     echo
-    echo -e "${CYAN}👉 Escribe ${WHITE}menu${CYAN} para abrir el panel.${RESET}"
+    echo -e "${CYAN}👉 Type ${WHITE}menu${CYAN} to abrir el panel.${RESET}"
     echo
 
 fi

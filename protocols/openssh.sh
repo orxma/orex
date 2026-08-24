@@ -23,34 +23,34 @@ echo -e "${WHITE}            🔐 OPENSSH MANAGER${RESET}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 if [[ "$OPENSSH" == "ON" ]]; then
-    ESTADO="${GREEN}🟢 ACTIVO${RESET}"
+    STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
-    ESTADO="${RED}🔴 DESINSTALADO${RESET}"
+    STATUS="${RED}🔴 DESINSTALADO${RESET}"
 fi
 
-echo -e " Estado     : $ESTADO"
-echo -e " Puerto     : 22"
-echo -e " Servicio   : ssh"
+echo -e " Status     : $STATUS"
+echo -e " Port     : 22"
+echo -e " Service   : ssh"
 echo ""
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 if [[ "$OPENSSH" == "ON" ]]; then
 cat <<EOF
- [1] ➮ Desinstalar OpenSSH
- [2] ➮ Reiniciar Servicio
- [3] ➮ Ver Estado
- [0] ➮ Regresar
+ [1] ➮ Uninstall OpenSSH
+ [2] ➮ Restart Service
+ [3] ➮ View Status
+ [0] ➮ Return
 EOF
 else
 cat <<EOF
- [1] ➮ Instalar OpenSSH
- [0] ➮ Regresar
+ [1] ➮ Install OpenSSH
+ [0] ➮ Return
 EOF
 fi
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-read -rp " ► Opción: " OP
+read -rp " ► Option: " OP
 
 case $OP in
 
@@ -59,7 +59,7 @@ case $OP in
 if [[ "$OPENSSH" == "ON" ]]; then
 
 echo ""
-read -rp "¿Desinstalar OpenSSH? (s/n): " R
+read -rp "Uninstall OpenSSH? (s/n): " R
 
 [[ "$R" != "s" ]] && continue
 
@@ -70,7 +70,7 @@ sed -i 's/OPENSSH=ON/OPENSSH=OFF/' "$CONFIG"
 OPENSSH=OFF
 
 echo ""
-echo "✅ OpenSSH desinstalado."
+echo "✅ OpenSSH desinstalled."
 
 sleep 2
 
@@ -89,7 +89,7 @@ sed -i 's/OPENSSH=OFF/OPENSSH=ON/' "$CONFIG"
 OPENSSH=ON
 
 echo ""
-echo "✅ OpenSSH instalado."
+echo "✅ OpenSSH installed."
 
 sleep 2
 
@@ -104,7 +104,7 @@ if [[ "$OPENSSH" == "ON" ]]; then
 systemctl restart ssh
 
 echo ""
-echo "✅ Servicio reiniciado."
+echo "✅ Service reiniciado."
 
 sleep 2
 
@@ -120,7 +120,7 @@ systemctl status ssh --no-pager
 
 echo ""
 
-read -n1 -r -p "Presione una tecla..."
+read -n1 -r -p "Press any key..."
 
 fi
 
@@ -136,7 +136,7 @@ exec bash "$BASE/protocols/menu.sh"
 
 echo ""
 
-echo "❌ Opción inválida."
+echo "❌ Option invalid."
 
 sleep 2
 

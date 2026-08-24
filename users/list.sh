@@ -1,7 +1,7 @@
 #!/bin/bash
 #==================================================
 # ORX Tunnel Multi Script
-# Lista de Usuarios SSH
+# User List SSH
 #==================================================
 
 GREEN="\e[1;92m"
@@ -17,27 +17,27 @@ RESET="\e[0m"
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}                      📋 USUARIOS REGISTRADOS SSH 📋                      ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}                      📋 USERS REGISTRADOS SSH 📋                      ${CYAN}║${RESET}"
 echo -e "${CYAN}╠════╦══════════════════╦══════════════╦════════╦══════════════════════════╣${RESET}"
 printf "${CYAN}║${WHITE} %-2s ${CYAN}║ ${WHITE}%-16s ${CYAN}║ ${WHITE}%-12s ${CYAN}║ ${WHITE}%-6s ${CYAN}║ ${WHITE}%-24s${CYAN}║${RESET}\n" \
-"N°" "USUARIO" "EXPIRA" "DÍAS" "ESTADO"
+"N°" "USER" "EXPIRES" "DAYS" "STATUS"
 echo -e "${CYAN}╠════╬══════════════════╬══════════════╬════════╬══════════════════════════╣${RESET}"
 
 TOTAL=0
-ACTIVOS=0
-EXPIRADOS=0
+ACTIVES=0
+EXPIRESDOS=0
 
 for USER in $(awk -F: '$3>=1000 && $1!="nobody"{print $1}' /etc/passwd); do
 
-EXPIRA=$(chage -l "$USER" | awk -F': ' '/Account expires/{print $2}')
+EXPIRES=$(chage -l "$USER" | awk -F': ' '/Account expires/{print $2}')
 
-if [[ "$EXPIRA" == "never" ]]; then
+if [[ "$EXPIRES" == "never" ]]; then
     FECHA="Nunca"
     DIAS="∞"
-    ESTADO="${GREEN}Activo${RESET}"
-    ((ACTIVOS++))
+    STATUS="${GREEN}Active${RESET}"
+    ((ACTIVES++))
 else
-    FECHA=$(date -d "$EXPIRA" +%Y-%m-%d 2>/dev/null)
+    FECHA=$(date -d "$EXPIRES" +%Y-%m-%d 2>/dev/null)
 
     HOY=$(date +%s)
     FIN=$(date -d "$FECHA" +%s)
@@ -46,27 +46,27 @@ else
 
     if [[ $REST -lt 0 ]]; then
         DIAS="0"
-        ESTADO="${RED}Expirado${RESET}"
-        ((EXPIRADOS++))
+        STATUS="${RED}Expiresdo${RESET}"
+        ((EXPIRESDOS++))
     else
         DIAS="$REST"
-        ESTADO="${GREEN}Activo${RESET}"
-        ((ACTIVOS++))
+        STATUS="${GREEN}Active${RESET}"
+        ((ACTIVES++))
     fi
 fi
 
 ((TOTAL++))
 
 printf "${CYAN}║${WHITE} %02d ${CYAN}║ ${WHITE}%-16s ${CYAN}║ ${WHITE}%-12s ${CYAN}║ ${WHITE}%-6s ${CYAN}║ %-33b${CYAN}║${RESET}\n" \
-"$TOTAL" "$USER" "$FECHA" "$DIAS" "$ESTADO"
+"$TOTAL" "$USER" "$FECHA" "$DIAS" "$STATUS"
 
 done
 
 echo -e "${CYAN}╠════╩══════════════════╩══════════════╩════════╩══════════════════════════╣${RESET}"
-echo -e "${WHITE} Total Usuarios : ${GREEN}$TOTAL"
-echo -e "${WHITE} Activos        : ${GREEN}$ACTIVOS"
-echo -e "${WHITE} Expirados      : ${RED}$EXPIRADOS"
+echo -e "${WHITE} Total Users : ${GREEN}$TOTAL"
+echo -e "${WHITE} Actives        : ${GREEN}$ACTIVES"
+echo -e "${WHITE} Expiresdos      : ${RED}$EXPIRESDOS"
 echo -e "${CYAN}╚════════════════════════════════════════════════════════════════════════════════╝${RESET}"
 
 echo
-read -n1 -s -r -p "Presione cualquier tecla para regresar..."
+read -n1 -s -r -p "Press any key to return..."

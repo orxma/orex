@@ -4,7 +4,7 @@
 #             🛡️ ORX TUNNEL MULTI SCRIPT
 #                 PROTOCOL MANAGEMENT PANEL
 # ==============================================================
-# Archivo: /etc/orx-tunnel/protocols/menu.sh
+# File: /etc/orx-tunnel/protocols/menu.sh
 # Config : /etc/orx-tunnel/config.conf
 # ==============================================================
 
@@ -37,7 +37,7 @@ if [[ $EUID -ne 0 ]]; then
     echo
     echo -e "${RED}${BOLD}✘ ACCESO DENEGADO${RESET}"
     echo
-    echo -e "${WHITE}Este panel requiere permisos de root.${RESET}"
+    echo -e "${WHITE}Este panel requiere permisos of root.${RESET}"
     echo
     exit 1
 fi
@@ -45,9 +45,9 @@ fi
 if [[ ! -f "$CONFIG" ]]; then
     clear
     echo
-    echo -e "${RED}${BOLD}✘ ERROR DE CONFIGURACIÓN${RESET}"
+    echo -e "${RED}${BOLD}✘ CONFIGURATION ERROR${RESET}"
     echo
-    echo -e "${WHITE}No se encontró:${RESET}"
+    echo -e "${WHITE}Not found:${RESET}"
     echo -e "${YELLOW}$CONFIG${RESET}"
     echo
     exit 1
@@ -66,7 +66,7 @@ separator() {
 
 pause() {
     echo
-    read -rp "$(echo -e "${GRAY}Presiona ENTER para continuar...${RESET}")"
+    read -rp "$(echo -e "${GRAY}Presiona ENTER to continue...${RESET}")"
 }
 
 module_exists() {
@@ -79,7 +79,7 @@ run_module() {
 
     if ! module_exists "$FILE"; then
         echo
-        echo -e "${RED}✘ Módulo no encontrado${RESET}"
+        echo -e "${RED}✘ Module not found${RESET}"
         echo -e "${GRAY}$FILE${RESET}"
         pause
         return
@@ -94,7 +94,7 @@ run_module() {
 }
 
 # ==============================================================
-# ESTADO DE SERVICIOS
+# STATUS DE SERVICES
 # ==============================================================
 
 service_exists() {
@@ -113,7 +113,7 @@ status_service() {
     if service_exists "$SERVICE"; then
 
         if service_active "$SERVICE"; then
-            echo -e "${GREEN}● ACTIVO${RESET}"
+            echo -e "${GREEN}● ACTIVE${RESET}"
         else
             echo -e "${RED}● OFF${RESET}"
         fi
@@ -134,14 +134,14 @@ status_config() {
     local VALUE="$1"
 
     if [[ "$VALUE" == "ON" ]]; then
-        echo -e "${GREEN}● ACTIVO${RESET}"
+        echo -e "${GREEN}● ACTIVE${RESET}"
     else
         echo -e "${GRAY}● OFF${RESET}"
     fi
 }
 
 # ==============================================================
-# INFORMACIÓN DEL SERVIDOR
+# SERVER INFORMATION
 # ==============================================================
 
 get_ip() {
@@ -245,7 +245,7 @@ show_header() {
     echo -e "${CYAN}║${RESET}                ${GRAY}PROTOCOL PANEL v$VERSION${RESET}                 ${CYAN}║${RESET}"
     separator
 
-    printf "${CYAN}║${RESET} ${WHITE}🖥 SERVIDOR${RESET} %-17s ${WHITE}🌐 IP${RESET} %-19s ${CYAN}║${RESET}\n" \
+    printf "${CYAN}║${RESET} ${WHITE}🖥 SERVER${RESET} %-17s ${WHITE}🌐 IP${RESET} %-19s ${CYAN}║${RESET}\n" \
         "${HOST:0:17}" "${IP:0:19}"
 
     printf "${CYAN}║${RESET} ${WHITE}⏱ UPTIME${RESET}  %-17s ${WHITE}👥 ONLINE${RESET} %-17s ${CYAN}║${RESET}\n" \
@@ -263,7 +263,7 @@ show_header() {
 }
 
 # ==============================================================
-# ESTADOS
+# STATUSS
 # ==============================================================
 
 OPENSSH_STATUS=$(status_service "ssh" "${OPENSSH:-OFF}")
@@ -280,7 +280,7 @@ ZIPVPN_STATUS=$(status_config "${ZIPVPN:-OFF}")
 BADVPN_STATUS=$(status_config "${BADVPN:-OFF}")
 
 # ==============================================================
-# MENÚ
+# MENU
 # ==============================================================
 
 while true; do
@@ -290,7 +290,7 @@ while true; do
     show_header
 
     echo
-    echo -e "${BLUE}${BOLD}  🔐 PROTOCOLOS DE CONEXIÓN${RESET}"
+    echo -e "${BLUE}${BOLD}  🔐 CONNECTION PROTOCOLS${RESET}"
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
     printf "  ${GREEN}${BOLD}[01]${RESET} 🔐 %-19s %b\n" \
@@ -327,22 +327,22 @@ while true; do
         "Hysteria v1" "$HYSTERIA_STATUS"
 
     echo
-    echo -e "${BLUE}${BOLD}  🛠️ ADMINISTRACIÓN DEL SISTEMA${RESET}"
+    echo -e "${BLUE}${BOLD}  🛠️ SYSTEM ADMINISTRATION${RESET}"
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
     echo -e "  ${GREEN}${BOLD}[12]${RESET} 🧰 Herramientas"
-    echo -e "  ${GREEN}${BOLD}[13]${RESET} 🔄 Reiniciar Servicios"
+    echo -e "  ${GREEN}${BOLD}[13]${RESET} 🔄 Restart Services"
     echo -e "  ${GREEN}${BOLD}[14]${RESET} 🔥 Firewall"
 
     echo
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
-    echo -e "  ${RED}${BOLD}[00]${RESET} ↩️  Regresar al Menú Principal"
+    echo -e "  ${RED}${BOLD}[00]${RESET} ↩️  Return to the Menu Principal"
 
     echo
     echo -e "${GRAY}  ORX Tunnel Multi Script • Privanox VPN • v${VERSION}${RESET}"
     echo
 
-    read -rp "$(echo -e "${CYAN}${BOLD}  ➜ Seleccione una opción: ${RESET}")" OP
+    read -rp "$(echo -e "${CYAN}${BOLD}  ➜ Select an option: ${RESET}")" OP
 
     case "$OP" in
 
@@ -412,7 +412,7 @@ while true; do
 
         *)
             echo
-            echo -e "  ${RED}${BOLD}✘ Opción inválida.${RESET}"
+            echo -e "  ${RED}${BOLD}✘ Option invalid.${RESET}"
             sleep 1
             ;;
 

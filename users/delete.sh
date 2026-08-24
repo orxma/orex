@@ -1,7 +1,7 @@
 #!/bin/bash
 #==================================================
 # ORX Tunnel Multi Script
-# Eliminar Usuarios SSH
+# Delete Users SSH
 #==================================================
 
 GREEN="\e[1;92m"
@@ -19,71 +19,71 @@ while true; do
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${RED}             🗑 ELIMINAR USUARIOS SSH              ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RED}             🗑 DELETE USERS SSH              ${CYAN}║${RESET}"
 echo -e "${CYAN}╠══════════════════════════════════════════════════════╣${RESET}"
 
 USERS=$(awk -F: '$3>=1000 && $1!="nobody"{print $1}' /etc/passwd)
 
 if [[ -z "$USERS" ]]; then
-    echo -e "${YELLOW}No existen usuarios SSH para eliminar.${RESET}"
+    echo -e "${YELLOW}None exist users SSH to delete.${RESET}"
     echo
-    read -n1 -s -r -p "Presione una tecla para salir..."
+    read -n1 -s -r -p "Press any key to exit..."
     exit
 fi
 
-echo -e "${WHITE}Usuarios disponibles:${RESET}"
+echo -e "${WHITE}Users availables:${RESET}"
 echo
 
 i=1
-declare -a LISTA
+declare -a LIST
 
 while read -r user; do
     FECHA=$(chage -l "$user" | grep "Account expires" | cut -d: -f2)
     printf "${GREEN}[%02d]${WHITE} %-18s ${GRAY}%s${RESET}\n" "$i" "$user" "$FECHA"
-    LISTA[$i]="$user"
+    LIST[$i]="$user"
     ((i++))
 done <<< "$USERS"
 
 echo
 echo -e "${CYAN}──────────────────────────────────────────────────────${RESET}"
-echo -e "${YELLOW}Ejemplos:${RESET}"
-echo -e " ${WHITE}1${RESET}        -> Elimina un usuario"
-echo -e " ${WHITE}1 3 5${RESET}    -> Elimina varios usuarios"
+echo -e "${YELLOW}Examples:${RESET}"
+echo -e " ${WHITE}1${RESET}        -> Delete a user"
+echo -e " ${WHITE}1 3 5${RESET}    -> Delete varios users"
 echo -e " ${WHITE}0${RESET}        -> Cancelar"
 echo
-read -rp "$(echo -e "${GREEN}Seleccione:${RESET} ")" OP
+read -rp "$(echo -e "${GREEN}Select:${RESET} ")" OP
 
 [[ "$OP" == "0" ]] && exit
 
 echo
-echo -e "${RED}Se eliminarán:${RESET}"
+echo -e "${RED}The following users will be deleted:${RESET}"
 
 VALIDO=0
 
 for N in $OP; do
-    if [[ -n "${LISTA[$N]}" ]]; then
-        echo -e " ${WHITE}• ${LISTA[$N]}"
+    if [[ -n "${LIST[$N]}" ]]; then
+        echo -e " ${WHITE}• ${LIST[$N]}"
         VALIDO=1
     fi
 done
 
 [[ $VALIDO -eq 0 ]] && {
     echo
-    echo -e "${RED}Selección inválida.${RESET}"
+    echo -e "${RED}Selection invalid.${RESET}"
     sleep 2
     continue
 }
 
 echo
-read -rp "$(echo -e "${YELLOW}¿Confirma? [S/N]: ${RESET}")" RESP
+read -rp "$(echo -e "${YELLOW}Confirm? [Y/N]: ${RESET}")" RESP
 
 case "$RESP" in
-s|S|si|SI|Sí|sí)
+s|S|y|Y|Yes|yes)
 
 BORRADOS=0
 
 for N in $OP; do
-    USER="${LISTA[$N]}"
+    USER="${LIST[$N]}"
 
     if [[ -n "$USER" ]]; then
         pkill -u "$USER" &>/dev/null
@@ -93,13 +93,13 @@ for N in $OP; do
 done
 
 echo
-echo -e "${GREEN}✔ $BORRADOS usuario(s) eliminado(s).${RESET}"
+echo -e "${GREEN}✔ $BORRADOS user(s) deleted(s).${RESET}"
 sleep 2
 ;;
 
 *)
 echo
-echo -e "${YELLOW}Operación cancelada.${RESET}"
+echo -e "${YELLOW}Operation cancelled.${RESET}"
 sleep 2
 ;;
 esac

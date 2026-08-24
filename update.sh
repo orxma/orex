@@ -44,7 +44,7 @@ PURPLE="\e[38;5;141m"
 LIME="\e[38;5;154m"
 
 #=========================================================
-# VARIABLES DE LICENCIA
+# LICENSE VARIABLES
 #=========================================================
 
 INSTALL_KEY=""
@@ -55,7 +55,7 @@ LICENSE_TYPE="normal"
 LICENSE_DELETE_AT=""
 
 #=========================================================
-# VARIABLES DEL SERVIDOR
+# SERVER VARIABLES
 #=========================================================
 
 CLIENT_IP=""
@@ -63,8 +63,8 @@ OS_NAME=""
 HOSTNAME_SERVER=""
 DATE_NOW=""
 
-VERSION_ACTUAL="No disponible"
-NUEVA_VERSION="No disponible"
+VERSION_CURRENT="No available"
+NEW_VERSION="No available"
 
 #=========================================================
 # FUNCIONES
@@ -119,7 +119,7 @@ error_exit() {
 
 if [[ "$EUID" -ne 0 ]]; then
 
-    echo -e "${RED}❌ Este actualizador necesita ejecutarse como root.${RESET}"
+    echo -e "${RED}❌ This updater must be run as root.${RESET}"
     echo
 
     if command -v sudo >/dev/null 2>&1; then
@@ -135,15 +135,15 @@ if [[ "$EUID" -ne 0 ]]; then
 fi
 
 #=========================================================
-# COMPROBAR INSTALACIÓN
+# COMPROBAR INSTALLATION
 #=========================================================
 
 if [[ ! -d "$BASE" ]]; then
 
-    error "No existe el directorio $BASE."
+    error "The directory $BASE."
 
     echo
-    echo -e "${YELLOW}⚠ El sistema ORX Tunnel no parece estar instalado.${RESET}"
+    echo -e "${YELLOW}⚠ The system ORX Tunnel does not appear to be installed.${RESET}"
     echo
 
     exit 1
@@ -162,13 +162,13 @@ command -v git >/dev/null 2>&1 || MISSING+=" git"
 
 if [[ -n "$MISSING" ]]; then
 
-    echo -e "${CYAN}◆ Installing dependencias:${RESET}${WHITE}$MISSING${RESET}"
+    echo -e "${CYAN}◆ Installing dependencies:${RESET}${WHITE}$MISSING${RESET}"
     echo
 
     export DEBIAN_FRONTEND=noninteractive
 
     apt-get update -y >/dev/null 2>&1 || \
-        error_exit "No se pudieron actualizar los repositorios."
+        error_exit "Could not update the repositories."
 
     apt-get install -y \
         curl \
@@ -176,7 +176,7 @@ if [[ -n "$MISSING" ]]; then
         git \
         ca-certificates \
         >/dev/null 2>&1 || \
-        error_exit "No se pudieron instalar las dependencias."
+        error_exit "Could not install the dependencies."
 
 fi
 
@@ -186,11 +186,11 @@ fi
 
 titulo
 
-echo -e "${GOLD}${BOLD}◆ ACTUALIZACIÓN DEL SISTEMA${RESET}"
+echo -e "${GOLD}${BOLD}◆ SYSTEM UPDATE${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-info "Preparando actualización..."
+info "Preparing update..."
 
 echo -e " ${GRAY}➜${RESET} Repositorio: ${SKY}$REPO${RESET}"
 echo -e " ${GRAY}➜${RESET} Destino:     ${SKY}$BASE${RESET}"
@@ -199,38 +199,38 @@ echo -e " ${GRAY}➜${RESET} License API: ${SKY}$LICENSE_API${RESET}"
 echo
 
 #=========================================================
-# VERSIÓN INSTALADA
+# VERSION INSTALADA
 #=========================================================
 
 if [[ -f "$VERSION_FILE" ]]; then
 
-    VERSION_ACTUAL="$(
+    VERSION_CURRENT="$(
         head -n1 "$VERSION_FILE" |
         tr -d '\r'
     )"
 
 fi
 
-[[ -z "$VERSION_ACTUAL" ]] && \
-    VERSION_ACTUAL="No disponible"
+[[ -z "$VERSION_CURRENT" ]] && \
+    VERSION_CURRENT="No available"
 
-echo -e "${BLUE}${BOLD}◆ INFORMACIÓN DE VERSIÓN${RESET}"
+echo -e "${BLUE}${BOLD}◆ VERSION INFORMATION${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-echo -e " ${YELLOW}Version instalada:${RESET} ${WHITE}${VERSION_ACTUAL}${RESET}"
+echo -e " ${YELLOW}Version installed:${RESET} ${WHITE}${VERSION_CURRENT}${RESET}"
 
 echo
 
 #=========================================================
-# VERIFICAR SERVIDOR DE LICENCIAS
+# VERIFICAR SERVER LICENSE
 #=========================================================
 
-echo -e "${GOLD}${BOLD}◆ SERVIDOR DE LICENCIAS${RESET}"
+echo -e "${GOLD}${BOLD}◆ SERVER LICENSE${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-info "Comprobando API..."
+info "Checking API..."
 
 HEALTH_RESPONSE="$(
     curl \
@@ -256,7 +256,7 @@ HEALTH_BODY="$(
 
 if [[ "$HEALTH_HTTP" != "200" ]]; then
 
-    error "Servidor de licencias no disponible."
+    error "Server of the license not available."
 
     echo
     echo -e "${GRAY}HTTP: $HEALTH_HTTP${RESET}"
@@ -269,7 +269,7 @@ fi
 if ! echo "$HEALTH_BODY" |
     jq -e '.ok == true' >/dev/null 2>&1; then
 
-    error "La API de licencias devolvió un estado inválido."
+    error "The API of the license returned an invalid status."
 
     echo
     echo "$HEALTH_BODY"
@@ -279,25 +279,25 @@ if ! echo "$HEALTH_BODY" |
 
 fi
 
-ok "Servidor de licencias disponible."
+ok "Server of the license available."
 
 echo
 
 #=========================================================
-# LICENCIA
+# LICENSE
 #=========================================================
 
-echo -e "${GOLD}${BOLD}◆ AUTORIZACIÓN DE ACTUALIZACIÓN${RESET}"
+echo -e "${GOLD}${BOLD}◆ UPDATE AUTHORIZATION${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-echo -e " ${YELLOW}🔐 Esta actualización requiere una Key válida.${RESET}"
-echo -e " ${GRAY}La Key será validada mediante la API pública.${RESET}"
+echo -e " ${YELLOW}🔐 This update requiere a valid key.${RESET}"
+echo -e " ${GRAY}The key will be validated through the API public.${RESET}"
 echo
 
 while true; do
 
-    read -r -p " 🔑 Introduce tu Key de Installation: " INSTALL_KEY
+    read -r -p " 🔑 Enter your installation key: " INSTALL_KEY
 
     INSTALL_KEY="$(
         printf '%s' "$INSTALL_KEY" |
@@ -306,7 +306,7 @@ while true; do
 
     if [[ -z "$INSTALL_KEY" ]]; then
 
-        error "La Key no puede estar vacía."
+        error "The key cannot estar empty."
         echo
 
         continue
@@ -315,7 +315,7 @@ while true; do
 
     echo
 
-    info "Verificando licencia..."
+    info "Verifying license..."
 
     #=====================================================
     # JSON
@@ -361,15 +361,15 @@ while true; do
     )"
 
     #=====================================================
-    # ERROR DE CONEXIÓN
+    # CONNECTION ERROR
     #=====================================================
 
     if [[ "$CURL_STATUS" -ne 0 ]]; then
 
-        error "No fue posible conectar con la API."
+        error "Could not connect with the API."
 
         echo
-        echo -e "${YELLOW}Comprueba la conexión a Internet.${RESET}"
+        echo -e "${YELLOW}Check your Internet connection.${RESET}"
         echo
 
         sleep 2
@@ -379,12 +379,12 @@ while true; do
     fi
 
     #=====================================================
-    # HTTP VALIDACIÓN
+    # HTTP VALIDATION
     #=====================================================
 
     if [[ "$VALIDATE_HTTP" != "200" ]]; then
 
-        error "La API de validación respondió con HTTP $VALIDATE_HTTP."
+        error "The validation API returned HTTP $VALIDATE_HTTP."
 
         echo
         echo -e "${GRAY}Respuesta:${RESET}"
@@ -398,13 +398,13 @@ while true; do
     fi
 
     #=====================================================
-    # JSON VÁLIDO
+    # JSON VALID
     #=====================================================
 
     if ! echo "$VALIDATE_BODY" |
         jq empty >/dev/null 2>&1; then
 
-        error "La API devolvió una respuesta inválida."
+        error "The API returned an invalid response."
 
         echo
         echo -e "${GRAY}HTTP: $VALIDATE_HTTP${RESET}"
@@ -431,7 +431,7 @@ while true; do
     )"
 
     #=====================================================
-    # KEY INVÁLIDA
+    # KEY INVALID
     #=====================================================
 
     if [[ "$VALID" != "true" ]]; then
@@ -442,38 +442,38 @@ while true; do
 
             key_not_found)
 
-                error "La Key no existe."
+                error "The key does not exist."
 
                 ;;
 
             key_used)
 
-                error "La Key ya fue utilizada."
+                error "The key was already used."
 
                 ;;
 
             key_expired)
 
-                error "La Key ha expirado."
+                error "The key has expired."
 
                 ;;
 
             key_required)
 
-                error "No se recibió una Key."
+                error "No ... received a Key."
 
                 ;;
 
             *)
 
-                error "La Key no es válida."
+                error "The key is not valid."
 
                 ;;
 
         esac
 
         echo
-        echo -e "${YELLOW}La actualización no continuará.${RESET}"
+        echo -e "${YELLOW}The update will not continue.${RESET}"
         echo
 
         sleep 2
@@ -507,13 +507,13 @@ while true; do
     )"
 
     #=====================================================
-    # MOSTRAR LICENCIA
+    # MOSTRAR LICENSE
     #=====================================================
 
     echo
 
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-    echo -e "${GREEN}              ✅ LICENCIA VÁLIDA${RESET}"
+    echo -e "${GREEN}              ✅ VALID LICENSE${RESET}"
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
     echo
@@ -525,13 +525,13 @@ while true; do
     if [[ -n "$LICENSE_DELETE_AT" &&
           "$LICENSE_DELETE_AT" != "null" ]]; then
 
-        echo -e " ${GRAY}Expira     :${RESET} ${WHITE}${LICENSE_DELETE_AT}${RESET}"
+        echo -e " ${GRAY}Expires     :${RESET} ${WHITE}${LICENSE_DELETE_AT}${RESET}"
 
     fi
 
     echo
 
-    ok "Licencia autorizada para continuar."
+    ok "License authorized to continue."
 
     echo
 
@@ -540,10 +540,10 @@ while true; do
 done
 
 #=========================================================
-# INFORMACIÓN SERVIDOR
+# INFORMATION SERVER
 #=========================================================
 
-info "Recopilando information del servidor..."
+info "Collecting information dthe server..."
 
 CLIENT_IP="$(
     curl \
@@ -576,13 +576,13 @@ DATE_NOW="$(
 
 echo
 
-echo -e "${CYAN}${BOLD}◆ INFORMACIÓN DEL SERVIDOR${RESET}"
+echo -e "${CYAN}${BOLD}◆ SERVER INFORMATION${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
 echo -e " ${GRAY}IP:${RESET}        ${WHITE}$CLIENT_IP${RESET}"
 echo -e " ${GRAY}Hostname:${RESET}  ${WHITE}$HOSTNAME_SERVER${RESET}"
-echo -e " ${GRAY}Sistema:${RESET}   ${WHITE}$OS_NAME${RESET}"
+echo -e " ${GRAY}System:${RESET}   ${WHITE}$OS_NAME${RESET}"
 echo -e " ${GRAY}Fecha:${RESET}     ${WHITE}$DATE_NOW${RESET}"
 
 echo
@@ -591,24 +591,24 @@ echo
 # TEMPORAL
 #=========================================================
 
-info "Preparando archivos temporales..."
+info "Preparando files temporales..."
 
 rm -rf "$TMP"
 
 mkdir -p "$TMP" || \
-    error_exit "No se pudo crear el directorio temporal."
+    error_exit "Could not create the directory temporal."
 
 echo
 
 #=========================================================
-# DESCARGAR ACTUALIZACIÓN
+# DOWNLOAD UPDATE
 #=========================================================
 
-echo -e "${MAGENTA}${BOLD}◆ DESCARGANDO ACTUALIZACIÓN${RESET}"
+echo -e "${MAGENTA}${BOLD}◆ DOWNLOADING UPDATE${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-echo -e " ${CYAN}⬇${RESET} ${WHITE}Conectando con GitHub...${RESET}"
+echo -e " ${CYAN}⬇${RESET} ${WHITE}Connecting to GitHub...${RESET}"
 echo
 
 if ! curl -fsSL --max-time 30 "$MANIFEST_URL" -o "$TMP/manifest.txt"; then
@@ -619,9 +619,9 @@ if ! curl -fsSL --max-time 30 "$MANIFEST_URL" -o "$TMP/manifest.txt"; then
 
     echo
     echo -e " ${YELLOW}⚠${RESET} Comprueba:"
-    echo -e "   ${GRAY}•${RESET} Conexión a Internet"
+    echo -e "   ${GRAY}•${RESET} Connection a Internet"
     echo -e "   ${GRAY}•${RESET} Acceso a GitHub"
-    echo -e "   ${GRAY}•${RESET} Disponibilidad del repositorio"
+    echo -e "   ${GRAY}•${RESET} Availability of the repositorio"
     echo
 
     rm -rf "$TMP"
@@ -641,32 +641,32 @@ done < "$TMP/manifest.txt"
 
 echo
 
-ok "Actualización descargada correctamente."
+ok "Update desloadda successfully."
 
 #=========================================================
-# NUEVA VERSIÓN
+# NEW VERSION
 #=========================================================
 
 if [[ -f "$TMP/version.txt" ]]; then
 
-    NUEVA_VERSION="$(
+    NEW_VERSION="$(
         head -n1 "$TMP/version.txt" |
         tr -d '\r'
     )"
 
 fi
 
-[[ -z "$NUEVA_VERSION" ]] && \
-    NUEVA_VERSION="No disponible"
+[[ -z "$NEW_VERSION" ]] && \
+    NEW_VERSION="No available"
 
 echo
 
-echo -e "${PURPLE}${BOLD}◆ CONTROL DE VERSIÓN${RESET}"
+echo -e "${PURPLE}${BOLD}◆ VERSION CONTROL${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-echo -e " ${YELLOW}Version actual:${RESET} ${WHITE}${VERSION_ACTUAL}${RESET}"
-echo -e " ${GREEN}Nueva version:${RESET}  ${LIME}${NUEVA_VERSION}${RESET}"
+echo -e " ${YELLOW}Version current:${RESET} ${WHITE}${VERSION_CURRENT}${RESET}"
+echo -e " ${GREEN}New version:${RESET}  ${LIME}${NEW_VERSION}${RESET}"
 
 echo
 
@@ -681,11 +681,11 @@ echo
 BACKUP_DIR="${BASE}/backup"
 
 mkdir -p "$BACKUP_DIR" || \
-    error_exit "No se pudo crear el directorio de backup."
+    error_exit "Could not create the directory of backup."
 
 BACKUP_FILE="$BACKUP_DIR/backup_$(date '+%Y%m%d_%H%M%S').tar.gz"
 
-info "Creando copia de seguridad..."
+info "Creating backup..."
 
 if tar \
     -czf "$BACKUP_FILE" \
@@ -693,37 +693,37 @@ if tar \
     --exclude="./backup" \
     . >/dev/null 2>&1; then
 
-    ok "Backup creado."
+    ok "Backup created."
 
     echo -e " ${GRAY}➜${RESET} $BACKUP_FILE"
 
 else
 
-    warning "No se pudo crear el backup completo."
-    echo -e "${YELLOW}La actualización continuará.${RESET}"
+    warning "Could not create the backup completo."
+    echo -e "${YELLOW}The update will continue.${RESET}"
 
 fi
 
 echo
 
 #=========================================================
-# INSTALAR
+# INSTALL
 #=========================================================
 
-echo -e "${BLUE}${BOLD}◆ INSTALANDO ARCHIVOS${RESET}"
+echo -e "${BLUE}${BOLD}◆ INSTALANDO FILES${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-info "Copiando archivos..."
+info "Copiando files..."
 
 if ! cp -a "$TMP"/. "$BASE"/; then
 
     echo
 
-    error "No se pudieron copiar los archivos."
+    error "Could not copy los files."
 
     echo
-    warning "La Key NO será consumida."
+    warning "The key will NOT be consumed."
 
     rm -rf "$TMP"
 
@@ -731,10 +731,10 @@ if ! cp -a "$TMP"/. "$BASE"/; then
 
 fi
 
-ok "Archivos actualizados correctamente."
+ok "Files updated successfully."
 
 #=========================================================
-# VERSIÓN
+# VERSION
 #=========================================================
 
 if [[ -f "$TMP/version.txt" ]]; then
@@ -743,11 +743,11 @@ if [[ -f "$TMP/version.txt" ]]; then
         "$TMP/version.txt" \
         "$VERSION_FILE"
 
-    ok "Version instalada: ${NUEVA_VERSION}"
+    ok "Version installed: ${NEW_VERSION}"
 
 else
 
-    warning "No se encontró version.txt."
+    warning "Not found version.txt."
 
 fi
 
@@ -767,19 +767,19 @@ if [[ -f "$BASE/license.conf" ]]; then
 
 fi
 
-ok "Permisos actualizados."
+ok "Permisos updated."
 
 #=========================================================
-# ACTIVACIÓN
+# ACTIVATION
 #=========================================================
 
 echo
 
-echo -e "${GOLD}${BOLD}◆ REGISTRANDO ACTUALIZACIÓN${RESET}"
+echo -e "${GOLD}${BOLD}◆ REGISTRANDO UPDATE${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-info "Registrando actualización en License API..."
+info "Registering update en License API..."
 
 ACTIVATION_JSON="$(
     jq -n \
@@ -788,7 +788,7 @@ ACTIVATION_JSON="$(
         --arg hostname "$HOSTNAME_SERVER" \
         --arg os "$OS_NAME" \
         --arg date "$DATE_NOW" \
-        --arg version "$NUEVA_VERSION" \
+        --arg version "$NEW_VERSION" \
         '{
             key: $key,
             ip: $ip,
@@ -827,22 +827,22 @@ ACTIVATE_BODY="$(
 )"
 
 #=========================================================
-# ERROR CONEXIÓN
+# ERROR CONNECTION
 #=========================================================
 
 if [[ "$ACTIVATE_STATUS" -ne 0 ]]; then
 
     echo
 
-    error "No se pudo conectar con la API de activación."
+    error "Could not connect with the API of activation."
 
     echo
-    warning "La actualización fue instalada."
-    warning "La Key NO fue marcada como utilizada."
+    warning "The update was installed."
+    warning "The key was NOT marked as used."
 
     echo
     echo -e "${YELLOW}IMPORTANTE:${RESET}"
-    echo -e "${WHITE}La actualización necesita ser registrada manualmente.${RESET}"
+    echo -e "${WHITE}The update necesita ser registrada manualmente.${RESET}"
     echo
 
     rm -rf "$TMP"
@@ -858,7 +858,7 @@ fi
 if ! echo "$ACTIVATE_BODY" |
     jq empty >/dev/null 2>&1; then
 
-    error "La API devolvió una respuesta inválida."
+    error "The API returned an invalid response."
 
     echo
     echo -e "${GRAY}HTTP: $ACTIVATE_HTTP${RESET}"
@@ -887,24 +887,24 @@ ACTIVATE_ERROR="$(
 )"
 
 #=========================================================
-# VALIDACIÓN DE ACTIVACIÓN
+# VALIDATION DE ACTIVATION
 #
-# La API puede devolver:
+# The API puede dereturn:
 #
 # HTTP 200 = correcto
-# HTTP 201 = activación creada correctamente
+# HTTP 201 = activation created successfully
 #
-# La respuesta {"ok":true} tiene prioridad.
+# La response {"ok":true} tiene prioridad.
 #=========================================================
 
 if [[ "$ACTIVATE_OK" != "true" ]]; then
 
     echo
 
-    error "No se pudo registrar la actualización."
+    error "Could not registrar the update."
 
     echo
-    echo -e "${YELLOW}Código: ${ACTIVATE_ERROR:-desconocido}${RESET}"
+    echo -e "${YELLOW}Code: ${ACTIVATE_ERROR:-unknown}${RESET}"
     echo -e "${YELLOW}HTTP  : $ACTIVATE_HTTP${RESET}"
 
     echo
@@ -914,8 +914,8 @@ if [[ "$ACTIVATE_OK" != "true" ]]; then
 
     echo
 
-    warning "La actualización ya fue instalada."
-    warning "La Key NO fue consumida."
+    warning "The update was already installed."
+    warning "The key was NOT consumed."
 
     echo
 
@@ -926,7 +926,7 @@ if [[ "$ACTIVATE_OK" != "true" ]]; then
 fi
 
 #=========================================================
-# ACTIVACIÓN CORRECTA
+# ACTIVATION CORRECTA
 #=========================================================
 
 ACTIVATION_ID="$(
@@ -936,12 +936,12 @@ ACTIVATION_ID="$(
 
 echo
 
-ok "Servidor de activación respondió correctamente."
+ok "Server of activation responded successfully."
 echo -e " ${GRAY}HTTP:${RESET} ${GREEN}${ACTIVATE_HTTP}${RESET}"
 
 echo
 
-ok "Actualización registrada correctamente."
+ok "Update registrada successfully."
 
 if [[ -n "$ACTIVATION_ID" ]]; then
 
@@ -951,7 +951,7 @@ if [[ -n "$ACTIVATION_ID" ]]; then
 fi
 
 echo
-ok "La API marcó la Key como utilizada."
+ok "The API marked the key as used."
 
 #=========================================================
 # LIMPIAR MEMORIA
@@ -969,11 +969,11 @@ unset VALIDATE_RESPONSE
 
 echo
 
-info "Limpiando archivos temporales..."
+info "Limpiando files temporales..."
 
 rm -rf "$TMP"
 
-ok "Limpieza completada."
+ok "Limpieza completed."
 
 #=========================================================
 # FINAL
@@ -982,18 +982,18 @@ ok "Limpieza completada."
 echo
 
 echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}          ✅ ACTUALIZACIÓN COMPLETADA${RESET}              ${GREEN}║${RESET}"
+echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}          ✅ UPDATE COMPLETED${RESET}              ${GREEN}║${RESET}"
 echo -e "${GREEN}║${RESET} ${GRAY}          ORX Tunnel Multi Script Premium${RESET}           ${GREEN}║${RESET}"
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 
 echo
 
-echo -e " ${CYAN}◆${RESET} ${WHITE}Version anterior:${RESET} ${GRAY}${VERSION_ACTUAL}${RESET}"
-echo -e " ${CYAN}◆${RESET} ${WHITE}Version instalada:${RESET} ${GREEN}${NUEVA_VERSION}${RESET}"
+echo -e " ${CYAN}◆${RESET} ${WHITE}Version anterior:${RESET} ${GRAY}${VERSION_CURRENT}${RESET}"
+echo -e " ${CYAN}◆${RESET} ${WHITE}Version installed:${RESET} ${GREEN}${NEW_VERSION}${RESET}"
 
 echo
 
-echo -e " ${CYAN}◆${RESET} ${WHITE}Licencia:${RESET} ${GREEN}ACTIVADA${RESET}"
+echo -e " ${CYAN}◆${RESET} ${WHITE}License:${RESET} ${GREEN}ACTIVADA${RESET}"
 echo -e " ${CYAN}◆${RESET} ${WHITE}Propietario:${RESET} ${WHITE}${LICENSE_OWNER}${RESET}"
 echo -e " ${CYAN}◆${RESET} ${WHITE}Revendedor:${RESET} ${WHITE}${LICENSE_RESELLER}${RESET}"
 
@@ -1004,7 +1004,7 @@ echo -e "${CYAN}🚀${RESET} ${WHITE}Regresando al panel...${RESET}"
 sleep 2
 
 #=========================================================
-# REGRESAR AL MENÚ
+# REGRESAR AL MENU
 #=========================================================
 
 if [[ -f "$BASE/menu.sh" ]]; then
@@ -1014,9 +1014,9 @@ if [[ -f "$BASE/menu.sh" ]]; then
 else
 
     echo
-    warning "No se encontró menu.sh."
+    warning "Not found menu.sh."
     echo
-    echo -e "${CYAN}Escribe:${RESET} menu"
+    echo -e "${CYAN}Type:${RESET} menu"
     echo
 
 fi

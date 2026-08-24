@@ -38,7 +38,7 @@ title() {
 
 pause() {
     echo
-    read -rp "$(echo -e "${GRAY}Presiona ENTER para continuar...${RESET}")"
+    read -rp "$(echo -e "${GRAY}Presiona ENTER to continue...${RESET}")"
 }
 
 run_module() {
@@ -47,7 +47,7 @@ run_module() {
 
     if [[ ! -f "$BASE/users/$file" ]]; then
         echo
-        echo -e "${RED}✘ Módulo no encontrado:${RESET}"
+        echo -e "${RED}✘ Module not found:${RESET}"
         echo -e "${GRAY}$BASE/users/$file${RESET}"
         pause
         return
@@ -60,7 +60,7 @@ run_module() {
 }
 
 # =========================
-# INFORMACIÓN DEL SERVIDOR
+# SERVER INFORMATION
 # =========================
 
 get_cpu() {
@@ -112,7 +112,7 @@ get_uptime() {
 }
 
 # =========================
-# ESTADO DEL SERVICIO
+# SERVICE STATUS
 # =========================
 
 service_status() {
@@ -120,9 +120,9 @@ service_status() {
     local service="$1"
 
     if systemctl is-active --quiet "$service" 2>/dev/null; then
-        echo -e "${GREEN}● ACTIVO${RESET}"
+        echo -e "${GREEN}● ACTIVE${RESET}"
     else
-        echo -e "${RED}● INACTIVO${RESET}"
+        echo -e "${RED}● INACTIVE${RESET}"
     fi
 }
 
@@ -153,7 +153,7 @@ show_header() {
     echo -e "${CYAN}║${RESET}                  ${GRAY}SSH ADMIN PANEL${RESET}                  ${CYAN}║${RESET}"
     echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${RESET}"
 
-    printf "${CYAN}║${RESET} ${WHITE}🖥 SERVIDOR${RESET} %-18s ${WHITE}🌐 IP${RESET} %-18s${CYAN}║${RESET}\n" \
+    printf "${CYAN}║${RESET} ${WHITE}🖥 SERVER${RESET} %-18s ${WHITE}🌐 IP${RESET} %-18s${CYAN}║${RESET}\n" \
         "${hostname:0:18}" "${ip:0:18}"
 
     printf "${CYAN}║${RESET} ${WHITE}⏱ UPTIME${RESET}  %-18s ${WHITE}👥 SSH${RESET} %-18s${CYAN}║${RESET}\n" \
@@ -168,7 +168,7 @@ show_header() {
 }
 
 # =========================
-# OPCIÓN
+# OPTION
 # =========================
 
 option() {
@@ -188,7 +188,7 @@ if [[ $EUID -ne 0 ]]; then
     echo
     echo -e "${RED}${BOLD}✘ ACCESO DENEGADO${RESET}"
     echo
-    echo -e "${WHITE}Este panel requiere permisos de root.${RESET}"
+    echo -e "${WHITE}Este panel requiere permisos of root.${RESET}"
     echo
     echo -e "${YELLOW}Ejecuta:${RESET}"
     echo -e "${GREEN}sudo bash $0${RESET}"
@@ -198,7 +198,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # =========================
-# MENÚ PRINCIPAL
+# MAIN MENU
 # =========================
 
 while true; do
@@ -208,40 +208,40 @@ while true; do
     show_header
 
     echo
-    echo -e "${BLUE}${BOLD}  🔐 GESTIÓN DE USUARIOS SSH${RESET}"
+    echo -e "${BLUE}${BOLD}  🔐 SSH USER MANAGEMENT${RESET}"
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
-    option 1  "👤" "Crear Usuario SSH"
-    option 2  "🗑️" "Eliminar Usuario"
-    option 3  "♻️" "Renovar / Editar Usuario"
-    option 4  "📋" "Lista de Usuarios"
-    option 5  "🌐" "Usuarios Conectados"
+    option 1  "👤" "Create SSH User"
+    option 2  "🗑️" "Delete User"
+    option 3  "♻️" "Renew / Edit User"
+    option 4  "📋" "User List"
+    option 5  "🌐" "Connected Users"
 
     echo
-    echo -e "${BLUE}${BOLD}  🛡️ SEGURIDAD Y CONFIGURACIÓN${RESET}"
+    echo -e "${BLUE}${BOLD}  🛡️ SECURITY AND CONFIGURATION${RESET}"
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
     option 6  "📢" "Banner SSH / Dropbear"
-    option 7  "🔒" "Bloquear / Desbloquear"
-    option 8  "💾" "Backup de Usuarios"
+    option 7  "🔒" "Block / Unblock"
+    option 8  "💾" "User Backup"
 
     echo
     echo -e "${BLUE}${BOLD}  ⚙️ SISTEMA${RESET}"
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
-    option 9  "🔄" "Actualizar ORX Tunnel"
-    option 10 "📊" "Information del Servidor"
+    option 9  "🔄" "Update ORX Tunnel"
+    option 10 "📊" "Information of the Server"
 
     echo
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
-    echo -e "  ${RED}${BOLD}[00]${RESET} 🚪 ${WHITE}Volver al Menú Principal${RESET}"
+    echo -e "  ${RED}${BOLD}[00]${RESET} 🚪 ${WHITE}Return to the Menu Principal${RESET}"
 
     echo
     echo -e "${GRAY}  ORX Tunnel • Privanox VPN • v${VERSION}${RESET}"
     echo
 
-    read -rp "$(echo -e "${CYAN}${BOLD}  ➜ Seleccione una opción:${RESET} ")" op
+    read -rp "$(echo -e "${CYAN}${BOLD}  ➜ Select an option:${RESET} ")" op
 
     case "$op" in
 
@@ -283,14 +283,14 @@ while true; do
 
             echo
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-            echo -e "${CYAN}║${RESET}              ${MAGENTA}${BOLD}🔄 ACTUALIZADOR ORX TUNNEL${RESET}              ${CYAN}║${RESET}"
+            echo -e "${CYAN}║${RESET}              ${MAGENTA}${BOLD}🔄 UPDATEDR ORX TUNNEL${RESET}              ${CYAN}║${RESET}"
             echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
             echo
 
             if [[ -f "$BASE/update.sh" ]]; then
                 bash "$BASE/update.sh"
             else
-                echo -e "${YELLOW}⚠ El actualizador no está instalado.${RESET}"
+                echo -e "${YELLOW}⚠ El updater is not installed.${RESET}"
             fi
 
             pause
@@ -302,14 +302,14 @@ while true; do
 
             echo
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-            echo -e "${CYAN}║${RESET}              ${MAGENTA}${BOLD}📊 INFORMACIÓN DEL SERVIDOR${RESET}             ${CYAN}║${RESET}"
+            echo -e "${CYAN}║${RESET}              ${MAGENTA}${BOLD}📊 SERVER INFORMATION${RESET}             ${CYAN}║${RESET}"
             echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${RESET}"
 
             echo -e "${WHITE}🖥 Hostname     :${RESET} ${GREEN}$(hostname)${RESET}"
             echo -e "${WHITE}🌐 IP           :${RESET} ${GREEN}$(get_ip)${RESET}"
             echo -e "${WHITE}🧠 Kernel       :${RESET} ${GREEN}$(uname -r)${RESET}"
             echo -e "${WHITE}💻 Arquitectura :${RESET} ${GREEN}$(uname -m)${RESET}"
-            echo -e "${WHITE}🐧 Sistema      :${RESET} ${GREEN}$(. /etc/os-release && echo "$PRETTY_NAME")${RESET}"
+            echo -e "${WHITE}🐧 System      :${RESET} ${GREEN}$(. /etc/os-release && echo "$PRETTY_NAME")${RESET}"
             echo -e "${WHITE}⏱ Uptime       :${RESET} ${GREEN}$(get_uptime)${RESET}"
             echo -e "${WHITE}💾 RAM          :${RESET} ${GREEN}$(get_ram)${RESET}"
             echo -e "${WHITE}⚡ CPU          :${RESET} ${GREEN}$(get_cpu)${RESET}"
@@ -333,7 +333,7 @@ while true; do
             echo
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
             echo -e "${CYAN}║${RESET} ${GREEN}${BOLD}        ✔ SALIENDO DE ORX TUNNEL MULTI SCRIPT${RESET}        ${CYAN}║${RESET}"
-            echo -e "${CYAN}║${RESET}              ${GRAY}Gracias por utilizar el panel${RESET}              ${CYAN}║${RESET}"
+            echo -e "${CYAN}║${RESET}              ${GRAY}Gracias by utilizar el panel${RESET}              ${CYAN}║${RESET}"
             echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
             echo
 
@@ -345,7 +345,7 @@ while true; do
         *)
 
             echo
-            echo -e "  ${RED}${BOLD}✘ Opción inválida${RESET}"
+            echo -e "  ${RED}${BOLD}✘ Option invalid${RESET}"
             sleep 1
             ;;
 

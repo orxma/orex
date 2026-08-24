@@ -1,7 +1,7 @@
 #!/bin/bash
 #==================================================
 # ORX Tunnel Multi Script
-# Log de Conexiones SSH
+# Log of Connections SSH
 #==================================================
 
 GREEN="\e[1;92m"
@@ -19,10 +19,10 @@ while true; do
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}                    📊 LOG DE CONEXIONES SSH 📊                      ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}                    📊 LOG OF CONNECTIONS SSH 📊                      ${CYAN}║${RESET}"
 echo -e "${CYAN}╠════╦══════════════════╦══════════════════════╦══════════════════════╣${RESET}"
 printf "${CYAN}║${WHITE} %-2s ${CYAN}║ ${WHITE}%-16s ${CYAN}║ ${WHITE}%-20s ${CYAN}║ ${WHITE}%-20s${CYAN}║${RESET}\n" \
-"N°" "USUARIO" "FECHA / HORA" "IP ORIGEN"
+"N°" "USER" "FECHA / HORA" "IP ORIGEN"
 echo -e "${CYAN}╠════╬══════════════════╬══════════════════════╬══════════════════════╣${RESET}"
 
 TOTAL=0
@@ -45,30 +45,30 @@ done
 echo -e "${CYAN}╚════════════════════════════════════════════════════════════════════════════╝${RESET}"
 
 echo
-echo -e "${YELLOW}Opciones disponibles:${RESET}"
+echo -e "${YELLOW}Optiones availables:${RESET}"
 echo
-echo -e "${GREEN}[1]${WHITE} Ver últimos 50 registros"
-echo -e "${GREEN}[2]${WHITE} Buscar usuario"
-echo -e "${GREEN}[3]${WHITE} Ver último acceso de un usuario"
-echo -e "${RED}[0]${WHITE} Salir"
+echo -e "${GREEN}[1]${WHITE} View latest 50 logs"
+echo -e "${GREEN}[2]${WHITE} Search user"
+echo -e "${GREEN}[3]${WHITE} View latest acceso of a user"
+echo -e "${RED}[0]${WHITE} Exit"
 
 echo
-read -rp "$(echo -e "${GREEN}Seleccione:${RESET} ")" OP
+read -rp "$(echo -e "${GREEN}Select:${RESET} ")" OP
 
 case "$OP" in
 
 1)
 clear
-echo -e "${CYAN}══════════ ÚLTIMOS 50 REGISTROS ══════════${RESET}"
+echo -e "${CYAN}══════════ LATEST 50 LOGS ══════════${RESET}"
 echo
 last -50
 echo
-read -n1 -s -r -p "Presione cualquier tecla..."
+read -n1 -s -r -p "Press any key..."
 ;;
 
 2)
 
-read -rp "Usuario: " USER
+read -rp "User: " USER
 
 clear
 
@@ -78,22 +78,22 @@ echo
 last "$USER"
 
 echo
-read -n1 -s -r -p "Presione cualquier tecla..."
+read -n1 -s -r -p "Press any key..."
 ;;
 
 3)
 
-read -rp "Usuario: " USER
+read -rp "User: " USER
 
 clear
 
-echo -e "${CYAN}══════════ ÚLTIMO ACCESO ══════════${RESET}"
+echo -e "${CYAN}══════════ LAST ACCESS ══════════${RESET}"
 echo
 
 last "$USER" | head -1
 
 echo
-read -n1 -s -r -p "Presione cualquier tecla..."
+read -n1 -s -r -p "Press any key..."
 ;;
 
 0)
@@ -102,7 +102,7 @@ exit
 
 *)
 echo
-echo -e "${RED}Opción inválida.${RESET}"
+echo -e "${RED}Option invalid.${RESET}"
 sleep 2
 ;;
 

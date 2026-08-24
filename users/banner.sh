@@ -35,14 +35,14 @@ echo -e "${CYAN}╔════════════════════�
 echo -e "${CYAN}║${MAGENTA}            📢 BANNER SSH / DROPBEAR 📢            ${CYAN}║${RESET}"
 echo -e "${CYAN}╠════════════════════════════════════════════════════╣${RESET}"
 
-echo -e "${GREEN}[1]${WHITE} Crear nuevo Banner"
-echo -e "${BLUE}[2]${WHITE} Ver Banner actual"
-echo -e "${YELLOW}[3]${WHITE} Editar Banner"
-echo -e "${RED}[4]${WHITE} Eliminar Banner"
-echo -e "${CYAN}[0]${WHITE} Regresar"
+echo -e "${GREEN}[1]${WHITE} Crear new Banner"
+echo -e "${BLUE}[2]${WHITE} View Banner current"
+echo -e "${YELLOW}[3]${WHITE} Edit Banner"
+echo -e "${RED}[4]${WHITE} Delete Banner"
+echo -e "${CYAN}[0]${WHITE} Return"
 
 echo
-read -rp "$(echo -e "${GREEN}Seleccione una opción:${RESET} ")" OP
+read -rp "$(echo -e "${GREEN}Select an option:${RESET} ")" OP
 
 case "$OP" in
 
@@ -51,17 +51,17 @@ case "$OP" in
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}               CREAR NUEVO BANNER                 ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}               CREATE NEW BANNER                 ${CYAN}║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo
 
-read -rp "$(echo -e "${GREEN}Nombre del Servidor:${RESET} ")" SERVER
+read -rp "$(echo -e "${GREEN}Name of the Server:${RESET} ")" SERVER
 [[ -z "$SERVER" ]] && SERVER="${SERVER_NAME:-ORX Tunnel VPN}"
 
 read -rp "$(echo -e "${GREEN}Texto Promocional:${RESET} ")" PROMO
-[[ -z "$PROMO" ]] && PROMO="🔥 Bienvenido a $SERVER 🔥"
+[[ -z "$PROMO" ]] && PROMO="🔥 Welcome a $SERVER 🔥"
 
-read -rp "$(echo -e "${GREEN}Canal Telegram (ej. @ORX Tunnel):${RESET} ")" CHANNEL
+read -rp "$(echo -e "${GREEN}Channel Telegram (ej. @ORX Tunnel):${RESET} ")" CHANNEL
 
 read -rp "$(echo -e "${GREEN}Soporte (ej. @KevinSupport):${RESET} ")" SUPPORT
 
@@ -74,11 +74,11 @@ cat > "$BANNER" <<EOF
 
 <font color="#ffffff">$PROMO</font><br><br>
 
-<font color="#ffff00">📢 Canal: $CHANNEL</font><br>
+<font color="#ffff00">📢 Channel: $CHANNEL</font><br>
 <font color="#00ffff">👤 Soporte: $SUPPORT</font><br><br>
 
 <font color="#29b6f6">══════════════════════</font><br>
-<font color="#00ff00">Gracias por usar nuestros servicios</font>
+<font color="#00ff00">Gracias by usar nuestros services</font>
 
 </center>
 
@@ -106,7 +106,7 @@ systemctl restart sshd 2>/dev/null
 systemctl restart dropbear 2>/dev/null
 
 echo
-echo -e "${GREEN}✔ Banner creado correctamente.${RESET}"
+echo -e "${GREEN}✔ Banner created successfully.${RESET}"
 sleep 2
 ;;
 
@@ -115,7 +115,7 @@ sleep 2
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}                 BANNER ACTUAL                    ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}                 BANNER CURRENT                    ${CYAN}║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo
 
@@ -132,12 +132,12 @@ if [[ -f "$BANNER" ]]; then
 
 else
 
-    echo -e "${RED}No existe ningún banner creado.${RESET}"
+    echo -e "${RED}Does not exist any banner created.${RESET}"
 
 fi
 
 echo
-read -n1 -s -r -p "Presione cualquier tecla para regresar..."
+read -n1 -s -r -p "Press any key to return..."
 
 ;;
 
@@ -150,7 +150,7 @@ echo -e "${CYAN}║${MAGENTA}                 EDITAR BANNER                    $
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo
 
-# Si no existe el banner, crear uno básico
+# If the banner does not exist, create a basic one
 if [[ ! -f "$BANNER" ]]; then
 
 cat > "$BANNER" <<EOF
@@ -159,7 +159,7 @@ cat > "$BANNER" <<EOF
 <center>
 
 <font color="#00ff00"><b>${SERVER_NAME:-ORX Tunnel VPN}</b></font><br>
-<font color="#ffffff">Bienvenido a nuestro servidor</font>
+<font color="#ffffff">Welcome a nuestro server</font>
 
 </center>
 
@@ -168,9 +168,9 @@ EOF
 
 fi
 
-# Verificar que nano esté instalado
+# Verificar que is not installed
 if ! command -v nano >/dev/null 2>&1; then
-    echo -e "${RED}Nano no está instalado.${RESET}"
+    echo -e "${RED}Nano is not installed.${RESET}"
     sleep 2
     break
 fi
@@ -194,13 +194,13 @@ if [[ -f "$DROPBEAR" ]]; then
     fi
 fi
 
-# Reiniciar servicios
+# Restart services
 systemctl restart ssh 2>/dev/null
 systemctl restart sshd 2>/dev/null
 systemctl restart dropbear 2>/dev/null
 
 echo
-echo -e "${GREEN}✔ Banner actualizado correctamente.${RESET}"
+echo -e "${GREEN}✔ Banner updated successfully.${RESET}"
 sleep 2
 
 ;;
@@ -210,46 +210,46 @@ sleep 2
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}               ELIMINAR BANNER                    ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}               DELETE BANNER                    ${CYAN}║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo
 
 if [[ ! -f "$BANNER" ]]; then
-    echo -e "${RED}No existe ningún banner para eliminar.${RESET}"
+    echo -e "${RED}Does not exist any banner to delete.${RESET}"
     sleep 2
     continue
 fi
 
-read -rp "$(echo -e "${YELLOW}¿Desea eliminar el banner? [S/N]: ${RESET}")" RESP
+read -rp "$(echo -e "${YELLOW}Do you want to delete the banner? [Y/N]: ${RESET}")" RESP
 
 case "$RESP" in
 
-s|S|si|SI|Sí|sí)
+s|S|y|Y|Yes|yes)
 
-    # Eliminar archivo del banner
+    # Delete banner file
     rm -f "$BANNER"
 
-    # Eliminar configuration de OpenSSH
+    # Delete configuration of OpenSSH
     sed -i '/^Banner /d' "$SSHD"
 
-    # Eliminar configuration de Dropbear
+    # Delete configuration of Dropbear
     if [[ -f "$DROPBEAR" ]]; then
         sed -i '/^DROPBEAR_BANNER=/d' "$DROPBEAR"
     fi
 
-    # Reiniciar servicios
+    # Restart services
     systemctl restart ssh 2>/dev/null
     systemctl restart sshd 2>/dev/null
     systemctl restart dropbear 2>/dev/null
 
     echo
-    echo -e "${GREEN}✔ Banner eliminado correctamente.${RESET}"
+    echo -e "${GREEN}✔ Banner deleted successfully.${RESET}"
     ;;
 
 *)
 
     echo
-    echo -e "${YELLOW}Operación cancelada.${RESET}"
+    echo -e "${YELLOW}Operation cancelled.${RESET}"
     ;;
 
 esac
@@ -264,7 +264,7 @@ break
 
 *)
 echo
-echo -e "${RED}Opción inválida.${RESET}"
+echo -e "${RED}Option invalid.${RESET}"
 sleep 2
 ;;
 
