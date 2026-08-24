@@ -1,0 +1,211 @@
+#!/bin/bash
+
+#=========================================================
+#      ORX TUNNEL - CHANGE DOMAIN (PART 1)
+#=========================================================
+
+BASE="/etc/orx-tunnel"
+CONFIG="$BASE/config.conf"
+
+GREEN="\e[1;92m"
+RED="\e[1;91m"
+YELLOW="\e[1;93m"
+CYAN="\e[1;96m"
+WHITE="\e[1;97m"
+RESET="\e[0m"
+
+[[ $EUID -ne 0 ]] && {
+    echo "You must run this as root."
+    exit 1
+}
+
+[[ ! -f "$CONFIG" ]] && {
+    echo "config.conf does not exist"
+    exit 1
+}
+
+source "$CONFIG"
+
+clear
+
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
+echo -e "${WHITE}║                 🌐 CHANGE DOMAIN                          ║${RESET}"
+echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
+echo
+
+CURRENT_DOMAIN="${SERVER_DOMAIN:-NOT CONFIGURED}"
+
+PUBLIC_IP=$(curl -4 -s https://api.ipify.org)
+
+echo -e "${WHITE}Current domain : ${GREEN}$CURRENT_DOMAIN${RESET}"
+echo -e "${WHITE}Public IP     : ${GREEN}$PUBLIC_IP${RESET}"
+echo
+
+read -rp "New domain: " NEWDOMAIN
+
+[[ -z "$NEWDOMAIN" ]] && {
+    echo
+    echo -e "${RED}You must enter a domain.${RESET}"
+    exit 1
+}
+
+#---------------------------------------------------------
+# Validate format
+#---------------------------------------------------------
+
+if ! [[ "$NEWDOMAIN" =~ ^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$ ]]; then
+
+    echo
+    echo -e "${RED}Invalid domain format.${RESET}"
+    exit 1
+
+fi
+
+echo
+echo -e "${CYAN}Verifying DNS...${RESET}"
+
+DOMAIN_IP=$(dig +short "$NEWDOMAIN" A | head -1)
+
+if [[ -z "$DOMAIN_IP" ]]; then
+
+    echo
+    echo -e "${RED}The domain has no A record.${RESET}"
+    exit 1
+
+fi
+
+if [[ "$DOMAIN_IP" != "$PUBLIC_IP" ]]; then
+
+    echo
+    echo -e "${RED}The domain does not point to this VPS.${RESET}"
+    echo
+    echo "VPS IP      : $PUBLIC_IP"
+    echo "Domain IP   : $DOMAIN_IP"
+    exit 1
+
+fi
+
+#---------------------------------------------------------
+# Backup
+#---------------------------------------------------------
+
+BACKUP="/etc/orx-tunnel/backup"
+
+mkdir -p "$BACKUP"
+
+DATE=$(date +%Y%m%d-%H%M%S)
+
+cp "$CONFIG" "$BACKUP/config.conf.$DATE"
+
+[[ -f /etc/xray/domain ]] && \
+cp /etc/xray/domain "$BACKUP/domain.$DATE"
+
+echo
+echo -e "${GREEN}✔ Verification completed.${RESET}"
+echo -e "${GREEN}✔ Backups created.${RESET}"
+
+echo
+echo -e "${YELLOW}Summary:${RESET}"
+
+echo "Current domain : $CURRENT_DOMAIN"
+echo "New domain     : $NEWDOMAIN"
+echo "VPS IP         : $PUBLIC_IP"
+
+echo
+echo -e "${CYAN}Continue with Part 2 to apply the change.${RESET}"
+#=========================================================
+# PART 2
+# Apply domain change
+#=========================================================
+
+clear
+
+echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
+echo -e "${WHITE}║               APPLYING CHANGES                             ║${RESET}"
+echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
+echo
+
+echo -e "${CYAN}Updating configuration...${RESET}"
+
+#---------------------------------------------------------
+# Save domain in config.conf
+#---------------------------------------------------------
+
+if grep -q '^SERVER_DOMAIN=' "$CONFIG"; then
+    sed -i "s|^SERVER_DOMAIN=.*|SERVER_DOMAIN=\"$NEWDOMAIN\"|" "$CONFIG"
+else
+    echo "SERVER_DOMAIN=\"$NEWDOMAIN\"" >> "$CONFIG"
+fi
+
+#---------------------------------------------------------
+# Create / update Xray domain
+#---------------------------------------------------------
+
+mkdir -p /etc/xray
+echo "$NEWDOMAIN" > /etc/xray/domain
+
+echo -e "${GREEN}✔ Domain updated.${RESET}"
+
+#---------------------------------------------------------
+# Restart Xray
+#---------------------------------------------------------
+
+echo -ne "Restarting Xray... "
+
+if systemctl restart xray 2>/dev/null; then
+    echo -e "${GREEN}OK${RESET}"
+else
+    echo -e "${RED}ERROR${RESET}"
+fi
+
+#---------------------------------------------------------
+# Validate HAProxy
+#---------------------------------------------------------
+
+echo -ne "Validating HAProxy... "
+
+if haproxy -c -f /etc/haproxy/haproxy.cfg >/dev/null 2>&1; then
+    echo -e "${GREEN}OK${RESET}"
+
+    echo -ne "Restarting HAProxy... "
+
+    if systemctl restart haproxy; then
+        echo -e "${GREEN}OK${RESET}"
+    else
+        echo -e "${RED}ERROR${RESET}"
+    fi
+
+else
+    echo -e "${RED}Invalid configuration${RESET}"
+    exit 1
+fi
+
+#---------------------------------------------------------
+# Verify services
+#---------------------------------------------------------
+
+echo
+echo "Service status:"
+
+systemctl is-active --quiet xray \
+    && echo -e "Xray     : ${GREEN}ACTIVE${RESET}" \
+    || echo -e "Xray     : ${RED}STOPPED${RESET}"
+
+systemctl is-active --quiet haproxy \
+    && echo -e "HAProxy  : ${GREEN}ACTIVE${RESET}" \
+    || echo -e "HAProxy  : ${RED}STOPPED${RESET}"
+
+echo
+
+echo -e "${GREEN}═══════════════════════════════════════════════════════════${RESET}"
+echo -e "${GREEN}✔ Domain changed successfully.${RESET}"
+echo -e "${GREEN}═══════════════════════════════════════════════════════════${RESET}"
+
+echo
+echo "Previous domain : $CURRENT_DOMAIN"
+echo "New domain     : $NEWDOMAIN"
+
+echo
+read -n1 -s -r -p "Press any key to return..."
+
+exec menu

@@ -25,7 +25,7 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 if [[ "$OPENSSH" == "ON" ]]; then
     STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
-    STATUS="${RED}🔴 DESINSTALADO${RESET}"
+    STATUS="${RED}🔴 UNINSTALLED${RESET}"
 fi
 
 echo -e " Status     : $STATUS"
@@ -104,7 +104,7 @@ if [[ "$OPENSSH" == "ON" ]]; then
 systemctl restart ssh
 
 echo ""
-echo "✅ Service reiniciado."
+echo "✅ Service restarted."
 
 sleep 2
 

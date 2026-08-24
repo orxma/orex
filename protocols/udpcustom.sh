@@ -145,7 +145,7 @@ echo "UDP_CUSTOM=ON" >> "$CONFIG"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ UDP CUSTOM INSTALADO"
+echo "✅ UDP CUSTOM INSTALLED"
 echo "Port: $PORT"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
@@ -246,7 +246,7 @@ echo "UDP_CUSTOM=OFF" >> "$CONFIG"
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ UDP CUSTOM ELIMINADO"
+echo "✅ UDP CUSTOM REMOVED"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 
@@ -327,7 +327,7 @@ ss -ulnp | grep ":$PORT"
 
 echo ""
 
-read -n1 -r -p "Presiona a tecla to continue..."
+read -n1 -r -p "Press any key to continue..."
 
 }
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━#

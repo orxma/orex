@@ -38,7 +38,7 @@ title() {
 
 pause() {
     echo
-    read -rp "$(echo -e "${GRAY}Presiona ENTER to continue...${RESET}")"
+    read -rp "$(echo -e "${GRAY}Press ENTER to continue...${RESET}")"
 }
 
 run_module() {
@@ -190,7 +190,7 @@ if [[ $EUID -ne 0 ]]; then
     echo
     echo -e "${WHITE}Este panel requiere permisos of root.${RESET}"
     echo
-    echo -e "${YELLOW}Ejecuta:${RESET}"
+    echo -e "${YELLOW}Run:${RESET}"
     echo -e "${GREEN}sudo bash $0${RESET}"
     echo
 

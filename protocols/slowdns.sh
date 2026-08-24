@@ -358,7 +358,7 @@ fi
 
         echo ""
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        echo "      ✅ SLOWDNS INSTALADO"
+        echo "      ✅ SLOWDNS INSTALLED"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
         echo "🌐 Domain : $(cat "$DOMAIN_FILE")"

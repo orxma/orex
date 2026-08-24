@@ -269,7 +269,7 @@ load_domain() {
 }
 
 #--------------------------------------------------
-# Verificar Config
+# Verify Config
 #--------------------------------------------------
 
 check_xray_config() {
@@ -423,7 +423,7 @@ list_vmess_users() {
 
     if [[ "$TOTAL" == "0" ]]; then
 
-        echo -e "${CYAN}║${RED}              NO EXISTEN USERS REGISTRADOS              ${CYAN}║${RESET}"
+        echo -e "${CYAN}║${RED}              NO REGISTERED USERS EXIST              ${CYAN}║${RESET}"
         TOTAL=0
 
     fi
@@ -750,7 +750,7 @@ fi
 
     if systemctl is-active --quiet xray
     then
-        echo -e "${GREEN}✔ Xray reiniciado successfully.${RESET}"
+        echo -e "${GREEN}✔ Xray restarted successfully.${RESET}"
     else
         echo -e "${RED}✘ Restart failed Xray.${RESET}"
     fi
@@ -772,7 +772,7 @@ xray_status() {
     fi
 
     VERSION=$(xray version 2>/dev/null | head -1)
-    VERSION=${VERSION:-NO INSTALADO}
+    VERSION=${VERSION:-NOT INSTALLED}
 
     if xray run -test -config "$XRAY_CFG" >/dev/null 2>&1; then
         CONFIG_STATUS="${GREEN}🟢 CORRECTA${RESET}"
@@ -831,13 +831,13 @@ load_domain
 if systemctl is-active --quiet xray; then
     STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
-    STATUS="${RED}🔴 DESINSTALADO${RESET}"
+    STATUS="${RED}🔴 UNINSTALLED${RESET}"
 fi
 
 VERSION=$(xray version 2>/dev/null | head -1)
-VERSION=${VERSION:-NO INSTALADO}
+VERSION=${VERSION:-NOT INSTALLED}
 
-DOMAIN_SHOW="${DOMAIN:-${SERVER_DOMAIN:-NO CONFIGURADO}}"
+DOMAIN_SHOW="${DOMAIN:-${SERVER_DOMAIN:-NOT CONFIGURED}}"
 
 TOTAL_USERS=0
 ONLINE_USERS=0

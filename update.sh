@@ -227,7 +227,7 @@ CLIENT_IP="$(
 )"
 
 if [[ -z "$CLIENT_IP" ]]; then
-    CLIENT_IP="Desconocida"
+    CLIENT_IP="Unknown"
 fi
 
 OS_NAME="$(
@@ -236,7 +236,7 @@ OS_NAME="$(
 )"
 
 [[ -z "$OS_NAME" ]] && \
-    OS_NAME="Desconocido"
+    OS_NAME="Unknown"
 
 HOSTNAME_SERVER="$(hostname)"
 
@@ -290,7 +290,7 @@ if ! curl -fsSL --max-time 30 "$MANIFEST_URL" -o "$TMP/manifest.txt"; then
     echo
     echo -e " ${YELLOW}⚠${RESET} Comprueba:"
     echo -e "   ${GRAY}•${RESET} Connection a Internet"
-    echo -e "   ${GRAY}•${RESET} Acceso a GitHub"
+    echo -e "   ${GRAY}•${RESET} GitHub access"
     echo -e "   ${GRAY}•${RESET} Availability of the repositorio"
     echo
 

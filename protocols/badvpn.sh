@@ -102,7 +102,7 @@ source "$CONFIG"
 if [[ "$BADVPN" == "ON" ]]; then
     STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
-    STATUS="${RED}🔴 DESINSTALADO${RESET}"
+    STATUS="${RED}🔴 UNINSTALLED${RESET}"
 fi
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -171,7 +171,7 @@ systemctl restart $SERVICE1
 systemctl restart $SERVICE2
 
 echo ""
-echo "✅ Services reiniciados."
+echo "✅ Services restarted."
 
 sleep 2
 

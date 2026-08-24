@@ -146,7 +146,7 @@ read -n1 -s -r -p "Press any key to return..."
 clear
 
 echo -e "${CYAN}╔════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${MAGENTA}                 EDITAR BANNER                    ${CYAN}║${RESET}"
+echo -e "${CYAN}║${MAGENTA}                 EDIT BANNER                    ${CYAN}║${RESET}"
 echo -e "${CYAN}╚════════════════════════════════════════════════════╝${RESET}"
 echo
 

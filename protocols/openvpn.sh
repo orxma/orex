@@ -10,7 +10,7 @@ CONFIG="$BASE/config.conf"
 [[ -f "$CONFIG" ]] && source "$CONFIG"
 if [[ -z "$SERVER_DOMAIN" ]]; then
     echo "❌ No domain is configured."
-    echo "👉 Configure it first from el menu principal."
+    echo "👉 Configure it first from the main menu."
     exit 1
 fi
 GREEN="\e[1;92m"
@@ -47,18 +47,18 @@ group_name="nogroup"
 # Detect environments where $PATH does not include the sbin directories
 if ! grep -q sbin <<< "$PATH"; then
 	echo "❌ PATH does not include sbin."
-echo "👉 Ejecuta: su -"
+echo "👉 Run: su -"
 	exit
 fi
 
 if [[ "$EUID" -ne 0 ]]; then
-	echo "❌ Debes ejecutar este script as root."
+	echo "❌ You must run this script as root."
 	exit
 fi
 
 if [[ ! -e /dev/net/tun ]] || ! ( exec 7<>/dev/net/tun ) 2>/dev/null; then
-	echo "❌ El dispositivo TUN is not habilitado."
-echo "👉 Activa TUN before of install OpenVPN."
+	echo "❌ The TUN device is not enabled."
+echo "👉 Enable TUN before installing OpenVPN."
 	exit
 fi
 
@@ -99,7 +99,7 @@ if [[ ! -e /etc/openvpn/server/server.conf ]]; then
 	# Detect some Debian minimal setups where neither wget nor curl are installed
 	if ! hash wget 2>/dev/null && ! hash curl 2>/dev/null; then
 		echo "📦 Wget is not installed."
-read -n1 -r -p "Presiona any key to installlo..."
+read -n1 -r -p "Press any key to install..."
 		apt-get update
 		apt-get install -y wget
 	fi
@@ -151,9 +151,9 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 	client=$(sed 's/[^0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-]/_/g' <<< "$unsanitized_client")
 	[[ -z "$client" ]] && client="client"
 	echo
-	echo "✅ Todo listo to install OpenVPN."
+	echo "✅ Everything ready to install OpenVPN."
 
-	read -n1 -r -p "Presiona any key to continue..."
+	read -n1 -r -p "Press any key to continue..."
 	# If running inside a container, disable LimitNPROC to prevent conflicts
 	if systemd-detect-virt -cq; then
 		mkdir /etc/systemd/system/openvpn-server@server.service.d/ 2>/dev/null
@@ -313,7 +313,7 @@ echo "🔒 Port  : $port"
 echo "👤 Cliente : $client"
 echo "📄 File : /root/$client.ovpn"
 echo
-echo "💡 You can create more clientes from el menu OpenVPN."
+echo "💡 You can create more clients from the OpenVPN menu."
 else
 	clear
 

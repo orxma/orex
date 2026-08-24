@@ -141,7 +141,7 @@ restart_ssl_tunnel() {
     systemctl restart ssh-ws-internal.service
     systemctl restart haproxy
 
-    msg_ok "Services reiniciados."
+    msg_ok "Services restarted."
 
 }
 
@@ -181,7 +181,7 @@ source "$CONFIG" 2>/dev/null
 if systemctl is-active --quiet haproxy; then
     STATUS="${GREEN}🟢 ACTIVE${RESET}"
 else
-    STATUS="${RED}🔴 DESINSTALADO${RESET}"
+    STATUS="${RED}🔴 UNINSTALLED${RESET}"
 fi
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
@@ -189,7 +189,7 @@ echo -e "${WHITE}          🔐 SSL TUNNEL MANAGER${RESET}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 echo -e " Status      : $STATUS"
-echo -e " Domain     : ${SERVER_DOMAIN:-NO CONFIGURADO}"
+echo -e " Domain     : ${SERVER_DOMAIN:-NOT CONFIGURED}"
 echo -e " Ports     : 80, 443, 8080"
 echo -e " Service    : HAProxy"
 echo -e " Backend     : SSH WebSocket"
@@ -821,7 +821,7 @@ EOF
 }
 ensure_haproxy_running() {
 
-    # Verificar configuration
+    # Verify configuration
     [[ -f /etc/haproxy/haproxy.cfg ]] || return
     [[ -f /etc/haproxy/yha.pem ]] || return
 
@@ -831,7 +831,7 @@ ensure_haproxy_running() {
     # Aplicar resiliencia
     ensure_haproxy_resilience
 
-    # Verificar service interno
+    # Verify internal service
     if ! systemctl is-active --quiet ssh-ws-internal.service; then
 
         if [[ -f /etc/systemd/system/ssh-ws-internal.service ]]; then

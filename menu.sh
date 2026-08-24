@@ -15,7 +15,7 @@ CONFIG="$BASE/config.conf"
     clear
     echo ""
     echo "❌ Not found config.conf"
-    echo "👉 Ejecuta first install.sh"
+    echo "👉 Run install.sh first"
     echo ""
     exit 1
 }
@@ -161,7 +161,7 @@ echo -e "   ${GREEN}●${RESET} ${WHITE}Dropbear${RESET}       ${GRAY}:${RESET} 
 echo -e "   ${GREEN}●${RESET} ${WHITE}SSL Tunnel${RESET}     ${GRAY}:${RESET} ${GREEN}${BOLD}ON${RESET} ${GRAY}(80,443,8080)${RESET}"
 
 [[ "$ZIPVPN" == "ON" ]] && \
-echo -e "   ${GREEN}●${RESET} ${WHITE}ZiVPN${RESET}          ${GRAY}:${RESET} ${GREEN}${BOLD}ON${RESET} ${GRAY}(${ZIPVPN_PORT:-Desconocido})${RESET}"
+echo -e "   ${GREEN}●${RESET} ${WHITE}ZiVPN${RESET}          ${GRAY}:${RESET} ${GREEN}${BOLD}ON${RESET} ${GRAY}(${ZIPVPN_PORT:-Unknown})${RESET}"
 
 [[ "$BADVPN" == "ON" ]] && \
 echo -e "   ${GREEN}●${RESET} ${WHITE}BadVPN${RESET}         ${GRAY}:${RESET} ${GREEN}${BOLD}ON${RESET} ${GRAY}(7200,7300)${RESET}"
@@ -247,13 +247,21 @@ fi
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${WHITE}║                    🚀 OPTIMIZAR VPS                         ║${RESET}"
+echo -e "${WHITE}║                    🚀 OPTIMIZE VPS                           ║${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
-echo -e "${YELLOW}⚠️ Optimizador VPS no está disponible en esta versión.${RESET}"
-echo -e "${GRAY}Esta funcionalidad se agregará en una actualización futura.${RESET}"
-sleep 2
+if [[ -f "$BASE/tools/optimize.sh" ]]; then
+
+    bash "$BASE/tools/optimize.sh"
+
+else
+
+    echo -e "${RED}❌ optimize.sh not found.${RESET}"
+    sleep 2
+
+fi
+
 exec bash "$BASE/menu.sh"
 
 ;;
@@ -264,13 +272,21 @@ exec bash "$BASE/menu.sh"
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${WHITE}║                  🌐 CAMBIAR DOMINIO                         ║${RESET}"
+echo -e "${WHITE}║                  🌐 CHANGE DOMAIN                         ║${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
-echo -e "${YELLOW}⚠️ Cambiar dominio no está disponible en esta versión.${RESET}"
-echo -e "${GRAY}Esta funcionalidad se agregará en una actualización futura.${RESET}"
-sleep 2
+if [[ -f "$BASE/tools/change-domain" ]]; then
+
+    bash "$BASE/tools/change-domain"
+
+else
+
+    echo -e "${RED}❌ change-domain not found.${RESET}"
+    sleep 2
+
+fi
+
 exec bash "$BASE/menu.sh"
 
 ;;
@@ -324,7 +340,7 @@ exec bash "$BASE/menu.sh"
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${WHITE}║                📦 INSTALADOR DE PROTOCOLS                  ║${RESET}"
+echo -e "${WHITE}║                📦 PROTOCOL INSTALLER                  ║${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
@@ -345,7 +361,7 @@ elif [[ -f "$HOME/multi-script/protocols/menu.sh" ]]; then
 
 else
 
-    echo -e "${RED}❌ Not found el menu of protocols.${RESET}"
+    echo -e "${RED}❌ Protocol menu not found.${RESET}"
 
     sleep 2
 
@@ -478,7 +494,7 @@ fi
 
 chmod +x "$UPDATE"
 
-echo -e "${CYAN}◆${RESET} ${WHITE}Ejecutando updater...${RESET}"
+echo -e "${CYAN}◆${RESET} ${WHITE}Running updater...${RESET}"
 echo ""
 
 bash "$UPDATE"

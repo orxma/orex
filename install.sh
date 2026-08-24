@@ -55,7 +55,7 @@ SERVER_DOMAIN=""
 SERVER_IP=""
 DOMAIN_IP=""
 DOMAIN_IP_MATCH="NO"
-DNS_PROVIDER="Desconocido"
+DNS_PROVIDER="Unknown"
 
 SSL_TUNNEL="OFF"
 PROXY_STATUS="OFF"
@@ -180,7 +180,7 @@ if [[ "$EUID" -ne 0 ]]; then
     echo -e "${RED}║${RESET} ${WHITE}${BOLD}🔒 PERMISOS ROOT NECESARIOS${RESET}"
     echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
-    echo -e "${YELLOW}Ejecuta:${RESET}"
+    echo -e "${YELLOW}Run:${RESET}"
     echo
     echo -e "${CYAN}sudo -i${RESET}"
     echo
@@ -193,13 +193,13 @@ fi
 #=========================================================
 
 if [[ ! -f /etc/os-release ]]; then
-    error_exit "Could not detectar the system operativo."
+    error_exit "Could not detect the operating system."
 fi
 
 source /etc/os-release
 
 if [[ "$ID" != "ubuntu" ]]; then
-    error_exit "Este installedr solamente es compatible with Ubuntu."
+    error_exit "This installer is only compatible with Ubuntu."
 fi
 
 #=========================================================
@@ -208,7 +208,7 @@ fi
 
 titulo
 
-echo -e "${GREEN}             ● SISTEMA COMPATIBLE DETECTADO ●${RESET}"
+echo -e "${GREEN}             ● COMPATIBLE SYSTEM DETECTED ●${RESET}"
 echo
 echo -e "${WHITE}System : ${SKY}${PRETTY_NAME}${RESET}"
 echo -e "${WHITE}User : ${GOLD}root${RESET}"
@@ -220,9 +220,9 @@ linea_color
 # DEPENDENCIAS
 #=========================================================
 
-seccion "📦 PASO 0  •  PREPARANDO EL SISTEMA"
+seccion "📦 STEP 0  •  PREPARING SYSTEM"
 
-echo -e "${GRAY}Inicializando componentes requireds...${RESET}"
+echo -e "${GRAY}Initializing required components...${RESET}"
 echo
 
 loading "Updating repositories"
@@ -232,7 +232,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update -y >/dev/null 2>&1 || \
     error_exit "Could not update the repositories."
 
-ok "Repositorios updated."
+ok "Repositories updated."
 
 loading "Installing dependencies"
 
@@ -254,21 +254,21 @@ ok "Dependencias installeds."
 echo
 
 #=========================================================
-# PASO 2
-# SISTEMA
+# STEP 2
+# SYSTEM
 #=========================================================
 
-seccion "⚙️ PASO 2  •  PREPARANDO SERVER"
+seccion "⚙️ STEP 2  •  PREPARING SERVER"
 
-echo -e "${GRAY}Configurando componentes principales of the VPS.${RESET}"
+echo -e "${GRAY}Configuring main VPS components.${RESET}"
 echo
 
-loading "Updating paquetes"
+loading "Updating packages"
 
 apt-get update -y >/dev/null 2>&1 || \
     error_exit "Error updating repositories."
 
-loading "Installing componentes"
+loading "Installing components"
 
 apt-get install -y \
     curl \
@@ -293,16 +293,16 @@ apt-get install -y \
     ufw \
     fail2ban \
     >/dev/null 2>&1 || \
-    error_exit "Could not install todos los paquetes."
+    error_exit "Could not install all packages."
 
-ok "Componentes installeds."
+ok "Components installed."
 
 #=========================================================
 # OPENSSH
 #=========================================================
 
 echo
-info "Configurando OpenSSH..."
+info "Configuring OpenSSH..."
 
 systemctl enable ssh >/dev/null 2>&1 || true
 
@@ -336,7 +336,7 @@ ok "Firewall configured."
 #=========================================================
 
 echo
-info "Aplicando security SSH..."
+info "Applying SSH security..."
 
 SSHD_CFG="/etc/ssh/sshd_config"
 
@@ -376,7 +376,7 @@ if sshd -t >/dev/null 2>&1; then
 
 else
 
-    fail "Error en the configuration SSH."
+    fail "Error in SSH configuration."
 
     if [[ -f "${SSHD_CFG}.orx-tunnel.backup" ]]; then
 
@@ -386,7 +386,7 @@ else
 
         systemctl restart ssh
 
-        ok "Configuration anterior restaurada."
+        ok "Previous configuration restored."
 
     fi
 
@@ -397,7 +397,7 @@ fi
 #=========================================================
 
 echo
-info "Configurando Fail2Ban..."
+info "Configuring Fail2Ban..."
 
 mkdir -p /etc/fail2ban
 
@@ -419,11 +419,11 @@ systemctl restart fail2ban >/dev/null 2>&1 || true
 ok "Fail2Ban configured."
 
 #=========================================================
-# PASO 3
-# DOMINIO
+# STEP 3
+# DOMAIN
 #=========================================================
 
-seccion "🌐 PASO 3  •  CONFIGURATION DE DOMINIO"
+seccion "🌐 STEP 3  •  DOMAIN CONFIGURATION"
 
 read -r -p "$(echo -e "${CYAN}🌐 Domain of the VPS:${RESET} ")" SERVER_DOMAIN
 
@@ -444,11 +444,11 @@ SERVER_IP="$(
 )"
 
 if [[ -z "$SERVER_IP" ]]; then
-    SERVER_IP="Desconocida"
+    SERVER_IP="Unknown"
 fi
 
 DOMAIN_IP_MATCH="NO"
-DNS_PROVIDER="Desconocido"
+DNS_PROVIDER="Unknown"
 
 if [[ -n "$SERVER_DOMAIN" ]]; then
 
@@ -466,7 +466,7 @@ if [[ -n "$SERVER_DOMAIN" ]]; then
 
         DOMAIN_IP_MATCH="YES"
 
-        ok "The domain apunta successfully al VPS."
+        ok "The domain points successfully to the VPS."
 
     else
 
@@ -474,7 +474,7 @@ if [[ -n "$SERVER_DOMAIN" ]]; then
 
         if [[ -n "$DOMAIN_IP" ]]; then
 
-            echo -e " ${GRAY}IP encontrada:${RESET} ${YELLOW}$DOMAIN_IP${RESET}"
+            echo -e " ${GRAY}IP found:${RESET} ${YELLOW}$DOMAIN_IP${RESET}"
             echo -e " ${GRAY}IP of the VPS:   ${RESET} ${CYAN}$SERVER_IP${RESET}"
 
         fi
@@ -509,7 +509,7 @@ if [[ -n "$SERVER_DOMAIN" ]]; then
 
     fi
 
-    echo -e " ${GRAY}Proveedor DNS:${RESET} ${SKY}$DNS_PROVIDER${RESET}"
+    echo -e " ${GRAY}DNS Provider:${RESET} ${SKY}$DNS_PROVIDER${RESET}"
 
 else
 
@@ -518,19 +518,19 @@ else
 fi
 
 #=========================================================
-# PASO 4
-# DOWNLOAD SISTEMA
+# STEP 4
+# DOWNLOAD SYSTEM
 #=========================================================
 
-seccion "📥 PASO 4  •  INSTALANDO ORX TUNNEL"
+seccion "📥 STEP 4  •  INSTALLING ORX TUNNEL"
 
-echo -e "${GRAY}Downloading los componentes oficiales dthe system.${RESET}"
+echo -e "${GRAY}Downloading official system components.${RESET}"
 echo
 
 rm -rf "$TMP"
 mkdir -p "$TMP"
 
-loading "Downloading ORX Tunnthe files"
+loading "Downloading ORX Tunnel files"
 
 if ! curl -fsSL --max-time 30 "$MANIFEST_URL" -o "$TMP/manifest.txt"; then
     rm -rf "$TMP"
@@ -550,20 +550,20 @@ while IFS= read -r FILE || [[ -n "$FILE" ]]; do
     fi
 done < "$TMP/manifest.txt"
 
-ok "Files desloaddos."
+ok "Files downloaded."
 
 #=========================================================
 # BACKUPS
 #=========================================================
 
 echo
-info "Creating copias of security..."
+info "Creating security backups..."
 
 if [[ -f "$BASE/config.conf" ]]; then
     cp "$BASE/config.conf" "$BASE/config.conf.orx-tunnel.backup"
 fi
 
-ok "Backups preparados."
+ok "Backups prepared."
 
 #=========================================================
 # INSTALL FILES
@@ -575,7 +575,7 @@ cp -a "$TMP"/. "$BASE"/ || {
 
     rm -rf "$TMP"
 
-    error_exit "Could not copy los files."
+    error_exit "Could not copy files."
 
 }
 
@@ -716,7 +716,7 @@ EOF
 
                 systemctl restart ssh
 
-                ok "Acceso root habilitado."
+                ok "Root access enabled."
 
             else
 
@@ -876,7 +876,7 @@ if [[ "$EUID" -ne 0 ]]; then
 
     echo -e " 👤 User : $(whoami)"
     echo -e " 🔒 Status  : No eres root"
-    echo -e " 👉 Ejecuta: \e[1;96msudo -i\e[0m"
+    echo -e " 👉 Run: \e[1;96msudo -i\e[0m"
 
 else
 

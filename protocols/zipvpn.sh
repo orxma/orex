@@ -293,7 +293,7 @@ fi
         echo " Port   : $PORT"
         echo " Rango    : 20000-29999"
         echo " Config   : /etc/zivpn/config.json"
-        echo " SSL      : Habilitado"
+        echo " SSL      : Enabled"
 
     else
 

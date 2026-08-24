@@ -52,7 +52,7 @@ stop_hys() { systemctl stop hysteria1-server > /dev/null 2>&1; pkill -f hysteria
 
 # --- Function of Logs mejorada ---
 show_logs() {
-    echo -e "${COLOR[1]}Mostrando logs (Presiona Ctrl+C to stop la lectura)...${NC}"
+    echo -e "${COLOR[1]}Showing logs (Press Ctrl+C to stop reading)...${NC}"
     echo -e "${COLOR[7]}Una vez que te detengas, press Enter to return to the menu.${NC}"
     sleep 2
     journalctl -u hysteria1-server -n 50 -f
@@ -196,7 +196,7 @@ if [[ -z "$DOMAIN" ]]; then
 fi
 
 echo -e "${COLOR[5]}╔════════════════════════════════════════════════════╗${NC}"
-echo -e "${COLOR[5]}║${NC}${COLOR[6]}         INSTALADOR HYSTERIA V1 PRO          ${NC}${COLOR[5]}║${NC}"
+echo -e "${COLOR[5]}║${NC}${COLOR[6]}         HYSTERIA V1 PRO INSTALLER          ${NC}${COLOR[5]}║${NC}"
 echo -e "${COLOR[5]}╚════════════════════════════════════════════════════╝${NC}"
 echo
 

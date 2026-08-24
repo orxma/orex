@@ -66,7 +66,7 @@ separator() {
 
 pause() {
     echo
-    read -rp "$(echo -e "${GRAY}Presiona ENTER to continue...${RESET}")"
+    read -rp "$(echo -e "${GRAY}Press ENTER to continue...${RESET}")"
 }
 
 module_exists() {
@@ -121,7 +121,7 @@ status_service() {
     else
 
         if [[ "$CONFIG_STATUS" == "ON" ]]; then
-            echo -e "${YELLOW}● CONFIGURADO${RESET}"
+            echo -e "${YELLOW}● CONFIGURED${RESET}"
         else
             echo -e "${GRAY}● OFF${RESET}"
         fi
@@ -330,6 +330,10 @@ while true; do
     echo -e "${BLUE}${BOLD}  🛠️ SYSTEM ADMINISTRATION${RESET}"
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
 
+    echo -e "  ${GREEN}${BOLD}[12]${RESET} 🧰 Tools"
+    echo -e "  ${GREEN}${BOLD}[13]${RESET} 🔄 Restart Services"
+    echo -e "  ${GREEN}${BOLD}[14]${RESET} 🔥 Firewall"
+
     echo
     echo -e "${GRAY}  ─────────────────────────────────────────────────────────${RESET}"
     echo -e "  ${RED}${BOLD}[00]${RESET} ↩️  Return to the Menu Principal"
@@ -384,6 +388,18 @@ while true; do
 
         11)
             run_module "$BASE/protocols/udphisteria.sh"
+            ;;
+
+        12)
+            run_module "$BASE/tools/menu.sh"
+            ;;
+
+        13)
+            run_module "$BASE/tools/restart.sh"
+            ;;
+
+        14)
+            run_module "$BASE/tools/firewall.sh"
             ;;
 
         0)

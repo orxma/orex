@@ -90,7 +90,7 @@ install_dropbear() {
     echo -e "${WHITE}        INSTALL DROPBEAR${RESET}"
     line
 
-    # Ports predeterminados
+    # Default ports
     PORTS="90,143,109"
 
     IFS=',' read -ra PORT_ARRAY <<< "$PORTS"
