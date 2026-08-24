@@ -537,7 +537,11 @@ if ! curl -fsSL --max-time 30 "$MANIFEST_URL" -o "$TMP/manifest.txt"; then
     error_exit "Could not download the file manifest."
 fi
 
+# Normalize manifests served with Windows line endings before building URLs.
+sed -i 's/\r$//' "$TMP/manifest.txt"
+
 while IFS= read -r FILE || [[ -n "$FILE" ]]; do
+    FILE="${FILE//$'\r'/}"
     [[ -z "$FILE" || "$FILE" == \#* ]] && continue
     mkdir -p "$TMP/$(dirname "$FILE")"
     if ! curl -fsSL --max-time 30 "${BASE_URL}/${FILE}" -o "$TMP/$FILE"; then
