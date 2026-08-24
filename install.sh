@@ -2,7 +2,6 @@
 
 #=========================================================
 #        ORX TUNNEL INSTALLER
-#        LICENSE SYSTEM v2.2
 #        PREMIUM COLOR EDITION
 #=========================================================
 
@@ -47,17 +46,6 @@ BASE_URL="https://sc.orx.ma"
 MANIFEST_URL="${BASE_URL}/manifest.txt"
 
 #=========================================================
-# API LICENSE
-# IMPORTANTE:
-# NO SE MUESTRA EN PANTALLA
-#=========================================================
-
-LICENSE_API="https://usa.socialstreaming.xyz"
-
-# Bot visible to el user
-LICENSE_BOT="@aytou0"
-
-#=========================================================
 # CONFIGURATION
 #=========================================================
 
@@ -71,12 +59,6 @@ DNS_PROVIDER="Desconocido"
 
 SSL_TUNNEL="OFF"
 PROXY_STATUS="OFF"
-
-INSTALL_KEY="${INSTALL_KEY:-}"
-LICENSE_OWNER=""
-LICENSE_RESELLER=""
-LICENSE_TYPE="normal"
-LICENSE_DELETE_AT=""
 
 CLIENT_IP=""
 OS_NAME=""
@@ -230,7 +212,6 @@ echo -e "${GREEN}             ● SISTEMA COMPATIBLE DETECTADO ●${RESET}"
 echo
 echo -e "${WHITE}System : ${SKY}${PRETTY_NAME}${RESET}"
 echo -e "${WHITE}User : ${GOLD}root${RESET}"
-echo -e "${WHITE}License: ${MAGENTA}ORX Tunnel License System${RESET}"
 echo
 linea_color
 
@@ -271,262 +252,6 @@ update-ca-certificates >/dev/null 2>&1 || true
 
 ok "Dependencias installeds."
 echo
-
-#=========================================================
-# VERIFICAR API
-#=========================================================
-
-seccion "🔐 SISTEMA LICENSE"
-
-echo -e "${WHITE}Get your key from our official bot:${RESET}"
-echo
-echo -e " ${CYAN}🤖 Telegram:${RESET} ${PINK}${BOLD}${LICENSE_BOT}${RESET}"
-echo
-echo -e "${GRAY}Validation is performed automatically.${RESET}"
-echo
-loading "Checking system of the license"
-
-HEALTH_RESPONSE="$(
-    curl \
-        --silent \
-        --show-error \
-        --connect-timeout 5 \
-        --max-time 15 \
-        -4 \
-        -w '\n%{http_code}' \
-        "${LICENSE_API}/health" \
-        2>/dev/null
-)"
-
-HEALTH_HTTP="$(
-    printf '%s\n' "$HEALTH_RESPONSE" |
-    tail -n1
-)"
-
-HEALTH_BODY="$(
-    printf '%s\n' "$HEALTH_RESPONSE" |
-    sed '$d'
-)"
-
-if [[ "$HEALTH_HTTP" != "200" ]]; then
-
-    echo
-    fail "Server of the license not available."
-    echo
-    echo -e "${GRAY}Try again later.${RESET}"
-    echo
-
-    exit 1
-
-fi
-
-if ! echo "$HEALTH_BODY" |
-    jq -e '.ok == true' >/dev/null 2>&1; then
-
-    error_exit "The system of the license is not available."
-
-fi
-
-ok "System of the license operativo."
-
-#=========================================================
-# PASO 1
-# LICENSE
-#=========================================================
-
-seccion "🔑 PASO 1  •  VALIDATION DE LICENSE"
-
-echo -e "${WHITE}Ingresa the key proporcionada by ORX Tunnel.${RESET}"
-echo
-echo -e "${GRAY}No tienes a Key?${RESET}"
-echo -e " ${CYAN}🤖 Telegram:${RESET} ${PINK}${BOLD}${LICENSE_BOT}${RESET}"
-echo
-
-while true; do
-
-    if [[ -z "${INSTALL_KEY:-}" ]]; then
-
-        read -r -p "$(echo -e "${GOLD}🔑 Installation key:${RESET} ")" INSTALL_KEY
-
-    else
-
-        echo -e "${GOLD}🔑 Installation key:${RESET} ${INSTALL_KEY}"
-
-    fi
-
-    INSTALL_KEY="$(
-        printf '%s' "$INSTALL_KEY" |
-        tr -d '[:space:]'
-    )"
-
-    if [[ -z "$INSTALL_KEY" ]]; then
-
-        echo
-        fail "The key cannot estar empty."
-        echo
-
-        continue
-
-    fi
-
-    echo
-    loading "Verifying license"
-
-    REQUEST_JSON="$(
-        jq -n \
-            --arg key "$INSTALL_KEY" \
-            '{key:$key}'
-    )"
-
-    VALIDATE_RESPONSE="$(
-        curl \
-            --silent \
-            --show-error \
-            --connect-timeout 5 \
-            --max-time 15 \
-            -4 \
-            -w '\n%{http_code}' \
-            -X POST \
-            -H "Content-Type: application/json" \
-            --data "$REQUEST_JSON" \
-            "${LICENSE_API}/api/public/validate" \
-            2>/dev/null
-    )"
-
-    CURL_STATUS=$?
-
-    VALIDATE_HTTP="$(
-        printf '%s\n' "$VALIDATE_RESPONSE" |
-        tail -n1
-    )"
-
-    VALIDATE_BODY="$(
-        printf '%s\n' "$VALIDATE_RESPONSE" |
-        sed '$d'
-    )"
-
-    if [[ "$CURL_STATUS" -ne 0 ]]; then
-
-        echo
-        fail "Could not connect with the system of the license."
-        echo
-        pausa 2
-        continue
-
-    fi
-
-    if ! echo "$VALIDATE_BODY" |
-        jq empty >/dev/null 2>&1; then
-
-        echo
-        fail "The server returned an invalid response."
-        echo
-        pausa 2
-        continue
-
-    fi
-
-    VALID="$(
-    echo "$VALIDATE_BODY" |
-    jq -r '.ok // false'
-)"
-
-    ERROR_CODE="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.error // empty'
-    )"
-
-    if [[ "$VALID" != "true" ]]; then
-
-        echo
-
-        case "$ERROR_CODE" in
-
-            key_not_found)
-                echo -e "${RED}╭──────────────────────────────────────────────╮${RESET}"
-                echo -e "${RED}│${RESET} ${WHITE}❌ KEY NO ENCONTRADA${RESET}"
-                echo -e "${RED}╰──────────────────────────────────────────────╯${RESET}"
-                ;;
-
-            key_used)
-                echo -e "${RED}╭──────────────────────────────────────────────╮${RESET}"
-                echo -e "${RED}│${RESET} ${WHITE}❌ KEY YA UTILIZADA${RESET}"
-                echo -e "${RED}╰──────────────────────────────────────────────╯${RESET}"
-                ;;
-
-            key_expired)
-                echo -e "${YELLOW}╭──────────────────────────────────────────────╮${RESET}"
-                echo -e "${YELLOW}│${RESET} ${WHITE}⚠ KEY EXPIRESDA${RESET}"
-                echo -e "${YELLOW}╰──────────────────────────────────────────────╯${RESET}"
-                ;;
-
-            key_required)
-                fail "No ... received a Key."
-                ;;
-
-            *)
-                fail "The key is not valid."
-                ;;
-
-        esac
-
-        echo
-        echo -e "${GRAY}No files will be installed.${RESET}"
-        echo
-
-        pausa 2
-        continue
-
-    fi
-
-    #=====================================================
-    # DATOS DE LICENSE
-    #=====================================================
-
-    LICENSE_OWNER="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.owner // "Desconocido"'
-    )"
-
-    LICENSE_RESELLER="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.reseller // "Desconocido"'
-    )"
-
-    LICENSE_TYPE="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.type // "normal"'
-    )"
-
-    LICENSE_DELETE_AT="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.deleteAt // empty'
-    )"
-
-    echo
-    echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}                 ✅ VALID LICENSE${RESET}                  ${GREEN}║${RESET}"
-    echo -e "${GREEN}╠══════════════════════════════════════════════════════════════╣${RESET}"
-    echo -e "${GREEN}║${RESET} ${GRAY}Propietario:${RESET} ${WHITE}${LICENSE_OWNER}${RESET}"
-    echo -e "${GREEN}║${RESET} ${GRAY}Revendedor :${RESET} ${WHITE}${LICENSE_RESELLER}${RESET}"
-    echo -e "${GREEN}║${RESET} ${GRAY}Tipo       :${RESET} ${CYAN}${LICENSE_TYPE}${RESET}"
-
-    if [[ -n "$LICENSE_DELETE_AT" &&
-          "$LICENSE_DELETE_AT" != "null" ]]; then
-
-        echo -e "${GREEN}║${RESET} ${GRAY}Expires     :${RESET} ${YELLOW}${LICENSE_DELETE_AT}${RESET}"
-
-    fi
-
-    echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
-    echo
-
-    ok "License aceptada."
-    echo
-
-    break
-
-done
 
 #=========================================================
 # PASO 2
@@ -834,10 +559,6 @@ if [[ -f "$BASE/config.conf" ]]; then
     cp "$BASE/config.conf" "$BASE/config.conf.orx-tunnel.backup"
 fi
 
-if [[ -f "$BASE/license.conf" ]]; then
-    cp "$BASE/license.conf" "$BASE/license.conf.orx-tunnel.backup"
-fi
-
 ok "Backups preparados."
 
 #=========================================================
@@ -886,16 +607,6 @@ PROXY_STATUS="$PROXY_STATUS"
 AUTO_START=OFF
 
 #=========================================================
-# LICENSE
-#=========================================================
-
-LICENSE_API="$LICENSE_API"
-LICENSE_OWNER="$LICENSE_OWNER"
-LICENSE_RESELLER="$LICENSE_RESELLER"
-LICENSE_TYPE="$LICENSE_TYPE"
-LICENSE_DELETE_AT="$LICENSE_DELETE_AT"
-
-#=========================================================
 # PROTOCOLS
 #=========================================================
 
@@ -926,29 +637,10 @@ BBR=OFF
 EOF
 
 #=========================================================
-# LICENSE CONF
-# NO SE GUARDA LA KEY
-#=========================================================
-
-cat > "$BASE/license.conf" <<EOF
-LICENSE_OWNER="$LICENSE_OWNER"
-LICENSE_RESELLER="$LICENSE_RESELLER"
-LICENSE_TYPE="$LICENSE_TYPE"
-LICENSE_DELETE_AT="$LICENSE_DELETE_AT"
-LICENSE_API="$LICENSE_API"
-LICENSE_STATUS="VALIDATED"
-LICENSE_BOT="$LICENSE_BOT"
-EOF
-
-chmod 600 "$BASE/license.conf"
-
-#=========================================================
 # PERMISOS
 #=========================================================
 
 chmod -R 755 "$BASE"
-chmod 600 "$BASE/license.conf"
-
 ok "Permisos configureds."
 
 #=========================================================
@@ -1174,7 +866,6 @@ echo -e " \e[1;97mUptime   :\e[0m \e[1;92m$UPTIME\e[0m"
 echo -e " \e[1;97mFecha    :\e[0m \e[1;93m$FECHA\e[0m"
 echo -e " \e[1;97mHora     :\e[0m \e[1;94m$HORA\e[0m"
 echo
-echo -e " \e[1;96m🤖 Licenses:\e[0m \e[1;95m@aytou0\e[0m"
 echo -e "\e[1;96m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\e[0m"
 
 if [[ "$EUID" -ne 0 ]]; then
@@ -1196,188 +887,6 @@ EOF
 chmod +x /etc/profile.d/orx-tunnel-banner.sh
 
 #=========================================================
-# PASO FINAL
-# ACTIVAR KEY
-#=========================================================
-
-seccion "🔐 REGISTERING INSTALLATION"
-
-echo -e "${GRAY}Registering activation of esta installation...${RESET}"
-echo
-
-CLIENT_IP="$(
-    curl \
-        --silent \
-        --show-error \
-        --connect-timeout 5 \
-        --max-time 10 \
-        -4 \
-        https://api.ipify.org \
-        2>/dev/null
-)"
-
-if [[ -z "$CLIENT_IP" ]]; then
-    CLIENT_IP="Desconocida"
-fi
-
-OS_NAME="$(
-    grep '^PRETTY_NAME=' /etc/os-release |
-    cut -d '"' -f2
-)"
-
-HOSTNAME_VALUE="$(hostname)"
-
-DATE_NOW="$(
-    date -u '+%Y-%m-%dT%H:%M:%SZ'
-)"
-
-echo -e " ${GRAY}IP:${RESET}       ${CYAN}$CLIENT_IP${RESET}"
-echo -e " ${GRAY}Hostname:${RESET} ${SKY}$HOSTNAME_VALUE${RESET}"
-echo -e " ${GRAY}System:${RESET}  ${WHITE}$OS_NAME${RESET}"
-echo
-
-#=========================================================
-# JSON ACTIVATION
-#=========================================================
-
-ACTIVATION_JSON="$(
-    jq -n \
-        --arg key "$INSTALL_KEY" \
-        --arg ip "$CLIENT_IP" \
-        --arg hostname "$HOSTNAME_VALUE" \
-        --arg os "$OS_NAME" \
-        --arg date "$DATE_NOW" \
-        '{
-            key: $key,
-            ip: $ip,
-            hostname: $hostname,
-            os: $os,
-            date: $date
-        }'
-)"
-
-loading "Registering license"
-
-ACTIVATE_RESPONSE="$(
-    curl \
-        --silent \
-        --show-error \
-        --connect-timeout 5 \
-        --max-time 15 \
-        -4 \
-        -w '\n%{http_code}' \
-        -X POST \
-        -H "Content-Type: application/json" \
-        --data "$ACTIVATION_JSON" \
-        "${LICENSE_API}/api/public/activate" \
-        2>/dev/null
-)"
-
-ACTIVATE_STATUS=$?
-
-ACTIVATE_HTTP="$(
-    printf '%s\n' "$ACTIVATE_RESPONSE" |
-    tail -n1
-)"
-
-ACTIVATE_BODY="$(
-    printf '%s\n' "$ACTIVATE_RESPONSE" |
-    sed '$d'
-)"
-
-if [[ "$ACTIVATE_STATUS" -ne 0 ]]; then
-
-    echo
-    fail "Could not connect with the system of activation."
-    echo
-    echo -e "${YELLOW}The license was not marked as used.${RESET}"
-    echo
-    exit 1
-
-fi
-
-if ! echo "$ACTIVATE_BODY" |
-    jq empty >/dev/null 2>&1; then
-
-    echo
-    fail "The system returned an invalid response."
-    echo
-    exit 1
-
-fi
-
-ACTIVATE_OK="$(
-    echo "$ACTIVATE_BODY" |
-    jq -r '.ok // false'
-)"
-
-ACTIVATE_ERROR="$(
-    echo "$ACTIVATE_BODY" |
-    jq -r '.error // empty'
-)"
-
-if [[ "$ACTIVATE_OK" != "true" ]]; then
-
-    echo
-    fail "Could not registrar la activation."
-    echo
-    echo -e "${YELLOW}Code: ${ACTIVATE_ERROR:-unknown}${RESET}"
-    echo
-    echo -e "${RED}La installation will not be marked as complete.${RESET}"
-    echo
-
-    exit 1
-
-fi
-
-ACTIVATION_ID="$(
-    echo "$ACTIVATE_BODY" |
-    jq -r '.activationId // empty'
-)"
-
-echo
-echo -e "${GREEN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}              ✅ ACTIVATION COMPLETED${RESET}                ${GREEN}║${RESET}"
-echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
-echo
-
-if [[ -n "$ACTIVATION_ID" ]]; then
-    echo -e "${GRAY}ID of activation:${RESET} ${CYAN}${ACTIVATION_ID}${RESET}"
-    echo
-fi
-
-ok "The key was marked as used."
-
-#=========================================================
-# STATUS LOCAL
-#=========================================================
-
-if [[ -f "$BASE/license.conf" ]]; then
-
-    sed -i \
-        's/^LICENSE_STATUS=.*/LICENSE_STATUS="ACTIVE"/' \
-        "$BASE/license.conf"
-
-    chmod 600 "$BASE/license.conf"
-
-fi
-
-#=========================================================
-# LIMPIAR VARIABLES SENSIBLES
-#=========================================================
-
-unset INSTALL_KEY
-unset ACTIVATION_JSON
-unset VALIDATE_RESPONSE
-unset ACTIVATE_RESPONSE
-
-#=========================================================
-# LIMPIEZA
-#=========================================================
-
-rm -rf "$TMP"
-
-#=========================================================
 # FINAL
 #=========================================================
 
@@ -1389,10 +898,6 @@ echo -e "${GREEN}╚════════════════════
 echo
 
 echo -e " ${GREEN}●${RESET} ${WHITE}Server:${RESET} ${CYAN}LISTO${RESET}"
-echo -e " ${GREEN}●${RESET} ${WHITE}License:${RESET} ${GREEN}ACTIVA${RESET}"
-echo -e " ${GREEN}●${RESET} ${WHITE}Propietario:${RESET} ${WHITE}$LICENSE_OWNER${RESET}"
-echo -e " ${GREEN}●${RESET} ${WHITE}Revendedor:${RESET} ${WHITE}$LICENSE_RESELLER${RESET}"
-echo -e " ${GREEN}●${RESET} ${WHITE}Tipo:${RESET} ${CYAN}$LICENSE_TYPE${RESET}"
 
 echo
 
@@ -1405,13 +910,6 @@ echo -e "${PURPLE}║${RESET} ${GRAY}DNS    :${RESET} ${MAGENTA}${DNS_PROVIDER}$
 echo -e "${PURPLE}╚══════════════════════════════════════════════════════════════╝${RESET}"
 
 echo
-
-echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}                 🔐 SOPORTE Y LICENSES${RESET}                ${CYAN}║${RESET}"
-echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${RESET}"
-echo -e "${CYAN}║${RESET} ${GRAY}Bot oficial:${RESET} ${PINK}${BOLD}${LICENSE_BOT}${RESET}"
-echo -e "${CYAN}║${RESET} ${GRAY}Panel      :${RESET} ${GREEN}menu${RESET}"
-echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 
 echo
 echo -e "${GOLD}🚀 ORX Tunnel Multi Script is ready.${RESET}"

@@ -1,0 +1,1 @@
+- [Hosted script cache](hosted-script-cache.md) — local script fixes do not update sc.orx.ma until the hosted files and CDN cache are refreshed.

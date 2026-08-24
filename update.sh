@@ -2,8 +2,6 @@
 
 #=========================================================
 #        ORX TUNNEL UPDATER
-#        License key update system
-#        LICENSE API v2.2
 #=========================================================
 
 set -o pipefail
@@ -19,8 +17,6 @@ BASE_URL="https://sc.orx.ma"
 MANIFEST_URL="${BASE_URL}/manifest.txt"
 
 VERSION_FILE="$BASE/version.txt"
-
-LICENSE_API="https://usa.socialstreaming.xyz"
 
 #=========================================================
 # COLORES
@@ -42,17 +38,6 @@ GOLD="\e[38;5;220m"
 SKY="\e[38;5;117m"
 PURPLE="\e[38;5;141m"
 LIME="\e[38;5;154m"
-
-#=========================================================
-# LICENSE VARIABLES
-#=========================================================
-
-INSTALL_KEY=""
-
-LICENSE_OWNER=""
-LICENSE_RESELLER=""
-LICENSE_TYPE="normal"
-LICENSE_DELETE_AT=""
 
 #=========================================================
 # SERVER VARIABLES
@@ -150,6 +135,9 @@ if [[ ! -d "$BASE" ]]; then
 
 fi
 
+# Remove legacy license metadata from existing installations.
+rm -f "$BASE/license.conf" "$BASE/license.conf.orx-tunnel.backup"
+
 #=========================================================
 # DEPENDENCIAS
 #=========================================================
@@ -194,7 +182,6 @@ info "Preparing update..."
 
 echo -e " ${GRAY}➜${RESET} Repositorio: ${SKY}$REPO${RESET}"
 echo -e " ${GRAY}➜${RESET} Destino:     ${SKY}$BASE${RESET}"
-echo -e " ${GRAY}➜${RESET} License API: ${SKY}$LICENSE_API${RESET}"
 
 echo
 
@@ -221,323 +208,6 @@ echo
 echo -e " ${YELLOW}Version installed:${RESET} ${WHITE}${VERSION_CURRENT}${RESET}"
 
 echo
-
-#=========================================================
-# VERIFICAR SERVER LICENSE
-#=========================================================
-
-echo -e "${GOLD}${BOLD}◆ SERVER LICENSE${RESET}"
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo
-
-info "Checking API..."
-
-HEALTH_RESPONSE="$(
-    curl \
-        --silent \
-        --show-error \
-        --connect-timeout 5 \
-        --max-time 15 \
-        -4 \
-        -w '\n%{http_code}' \
-        "${LICENSE_API}/health" \
-        2>/dev/null
-)"
-
-HEALTH_HTTP="$(
-    printf '%s\n' "$HEALTH_RESPONSE" |
-    tail -n1
-)"
-
-HEALTH_BODY="$(
-    printf '%s\n' "$HEALTH_RESPONSE" |
-    sed '$d'
-)"
-
-if [[ "$HEALTH_HTTP" != "200" ]]; then
-
-    error "Server of the license not available."
-
-    echo
-    echo -e "${GRAY}HTTP: $HEALTH_HTTP${RESET}"
-    echo
-
-    exit 1
-
-fi
-
-if ! echo "$HEALTH_BODY" |
-    jq -e '.ok == true' >/dev/null 2>&1; then
-
-    error "The API of the license returned an invalid status."
-
-    echo
-    echo "$HEALTH_BODY"
-    echo
-
-    exit 1
-
-fi
-
-ok "Server of the license available."
-
-echo
-
-#=========================================================
-# LICENSE
-#=========================================================
-
-echo -e "${GOLD}${BOLD}◆ UPDATE AUTHORIZATION${RESET}"
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo
-
-echo -e " ${YELLOW}🔐 This update requiere a valid key.${RESET}"
-echo -e " ${GRAY}The key will be validated through the API public.${RESET}"
-echo
-
-while true; do
-
-    read -r -p " 🔑 Enter your installation key: " INSTALL_KEY
-
-    INSTALL_KEY="$(
-        printf '%s' "$INSTALL_KEY" |
-        tr -d '[:space:]'
-    )"
-
-    if [[ -z "$INSTALL_KEY" ]]; then
-
-        error "The key cannot estar empty."
-        echo
-
-        continue
-
-    fi
-
-    echo
-
-    info "Verifying license..."
-
-    #=====================================================
-    # JSON
-    #=====================================================
-
-    VALIDATE_JSON="$(
-        jq -n \
-            --arg key "$INSTALL_KEY" \
-            '{
-                key: $key
-            }'
-    )"
-
-    #=====================================================
-    # API VALIDATE
-    #=====================================================
-
-    VALIDATE_RESPONSE="$(
-        curl \
-            --silent \
-            --show-error \
-            --connect-timeout 5 \
-            --max-time 15 \
-            -4 \
-            -w '\n%{http_code}' \
-            -X POST \
-            -H "Content-Type: application/json" \
-            --data "$VALIDATE_JSON" \
-            "${LICENSE_API}/api/public/validate" \
-            2>/dev/null
-    )"
-
-    CURL_STATUS=$?
-
-    VALIDATE_HTTP="$(
-        printf '%s\n' "$VALIDATE_RESPONSE" |
-        tail -n1
-    )"
-
-    VALIDATE_BODY="$(
-        printf '%s\n' "$VALIDATE_RESPONSE" |
-        sed '$d'
-    )"
-
-    #=====================================================
-    # CONNECTION ERROR
-    #=====================================================
-
-    if [[ "$CURL_STATUS" -ne 0 ]]; then
-
-        error "Could not connect with the API."
-
-        echo
-        echo -e "${YELLOW}Check your Internet connection.${RESET}"
-        echo
-
-        sleep 2
-
-        continue
-
-    fi
-
-    #=====================================================
-    # HTTP VALIDATION
-    #=====================================================
-
-    if [[ "$VALIDATE_HTTP" != "200" ]]; then
-
-        error "The validation API returned HTTP $VALIDATE_HTTP."
-
-        echo
-        echo -e "${GRAY}Respuesta:${RESET}"
-        echo "$VALIDATE_BODY"
-        echo
-
-        sleep 2
-
-        continue
-
-    fi
-
-    #=====================================================
-    # JSON VALID
-    #=====================================================
-
-    if ! echo "$VALIDATE_BODY" |
-        jq empty >/dev/null 2>&1; then
-
-        error "The API returned an invalid response."
-
-        echo
-        echo -e "${GRAY}HTTP: $VALIDATE_HTTP${RESET}"
-        echo
-
-        sleep 2
-
-        continue
-
-    fi
-
-    #=====================================================
-    # RESULTADO
-    #=====================================================
-
-    VALID="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.ok // .valid // false'
-    )"
-
-    ERROR_CODE="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.error // empty'
-    )"
-
-    #=====================================================
-    # KEY INVALID
-    #=====================================================
-
-    if [[ "$VALID" != "true" ]]; then
-
-        echo
-
-        case "$ERROR_CODE" in
-
-            key_not_found)
-
-                error "The key does not exist."
-
-                ;;
-
-            key_used)
-
-                error "The key was already used."
-
-                ;;
-
-            key_expired)
-
-                error "The key has expired."
-
-                ;;
-
-            key_required)
-
-                error "No ... received a Key."
-
-                ;;
-
-            *)
-
-                error "The key is not valid."
-
-                ;;
-
-        esac
-
-        echo
-        echo -e "${YELLOW}The update will not continue.${RESET}"
-        echo
-
-        sleep 2
-
-        continue
-
-    fi
-
-    #=====================================================
-    # DATOS
-    #=====================================================
-
-    LICENSE_OWNER="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.owner // "Desconocido"'
-    )"
-
-    LICENSE_RESELLER="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.reseller // "Desconocido"'
-    )"
-
-    LICENSE_TYPE="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.type // "normal"'
-    )"
-
-    LICENSE_DELETE_AT="$(
-        echo "$VALIDATE_BODY" |
-        jq -r '.deleteAt // empty'
-    )"
-
-    #=====================================================
-    # MOSTRAR LICENSE
-    #=====================================================
-
-    echo
-
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-    echo -e "${GREEN}              ✅ VALID LICENSE${RESET}"
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-
-    echo
-
-    echo -e " ${GRAY}Propietario:${RESET} ${WHITE}${LICENSE_OWNER}${RESET}"
-    echo -e " ${GRAY}Revendedor :${RESET} ${WHITE}${LICENSE_RESELLER}${RESET}"
-    echo -e " ${GRAY}Tipo       :${RESET} ${WHITE}${LICENSE_TYPE}${RESET}"
-
-    if [[ -n "$LICENSE_DELETE_AT" &&
-          "$LICENSE_DELETE_AT" != "null" ]]; then
-
-        echo -e " ${GRAY}Expires     :${RESET} ${WHITE}${LICENSE_DELETE_AT}${RESET}"
-
-    fi
-
-    echo
-
-    ok "License authorized to continue."
-
-    echo
-
-    break
-
-done
 
 #=========================================================
 # INFORMATION SERVER
@@ -761,207 +431,7 @@ info "Aplicando permisos..."
 
 chmod -R 755 "$BASE" >/dev/null 2>&1 || true
 
-if [[ -f "$BASE/license.conf" ]]; then
-
-    chmod 600 "$BASE/license.conf" >/dev/null 2>&1 || true
-
-fi
-
 ok "Permisos updated."
-
-#=========================================================
-# ACTIVATION
-#=========================================================
-
-echo
-
-echo -e "${GOLD}${BOLD}◆ REGISTRANDO UPDATE${RESET}"
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo
-
-info "Registering update en License API..."
-
-ACTIVATION_JSON="$(
-    jq -n \
-        --arg key "$INSTALL_KEY" \
-        --arg ip "$CLIENT_IP" \
-        --arg hostname "$HOSTNAME_SERVER" \
-        --arg os "$OS_NAME" \
-        --arg date "$DATE_NOW" \
-        --arg version "$NEW_VERSION" \
-        '{
-            key: $key,
-            ip: $ip,
-            hostname: $hostname,
-            os: $os,
-            date: $date,
-            version: $version
-        }'
-)"
-
-ACTIVATE_RESPONSE="$(
-    curl \
-        --silent \
-        --show-error \
-        --connect-timeout 5 \
-        --max-time 15 \
-        -4 \
-        -w '\n%{http_code}' \
-        -X POST \
-        -H "Content-Type: application/json" \
-        --data "$ACTIVATION_JSON" \
-        "${LICENSE_API}/api/public/activate" \
-        2>/dev/null
-)"
-
-ACTIVATE_STATUS=$?
-
-ACTIVATE_HTTP="$(
-    printf '%s\n' "$ACTIVATE_RESPONSE" |
-    tail -n1
-)"
-
-ACTIVATE_BODY="$(
-    printf '%s\n' "$ACTIVATE_RESPONSE" |
-    sed '$d'
-)"
-
-#=========================================================
-# ERROR CONNECTION
-#=========================================================
-
-if [[ "$ACTIVATE_STATUS" -ne 0 ]]; then
-
-    echo
-
-    error "Could not connect with the API of activation."
-
-    echo
-    warning "The update was installed."
-    warning "The key was NOT marked as used."
-
-    echo
-    echo -e "${YELLOW}IMPORTANTE:${RESET}"
-    echo -e "${WHITE}The update necesita ser registrada manualmente.${RESET}"
-    echo
-
-    rm -rf "$TMP"
-
-    exit 1
-
-fi
-
-#=========================================================
-# JSON
-#=========================================================
-
-if ! echo "$ACTIVATE_BODY" |
-    jq empty >/dev/null 2>&1; then
-
-    error "The API returned an invalid response."
-
-    echo
-    echo -e "${GRAY}HTTP: $ACTIVATE_HTTP${RESET}"
-    echo
-    echo "$ACTIVATE_BODY"
-    echo
-
-    rm -rf "$TMP"
-
-    exit 1
-
-fi
-
-#=========================================================
-# RESULTADO API
-#=========================================================
-
-ACTIVATE_OK="$(
-    echo "$ACTIVATE_BODY" |
-    jq -r '.ok // false'
-)"
-
-ACTIVATE_ERROR="$(
-    echo "$ACTIVATE_BODY" |
-    jq -r '.error // empty'
-)"
-
-#=========================================================
-# VALIDATION DE ACTIVATION
-#
-# The API puede dereturn:
-#
-# HTTP 200 = correcto
-# HTTP 201 = activation created successfully
-#
-# La response {"ok":true} tiene prioridad.
-#=========================================================
-
-if [[ "$ACTIVATE_OK" != "true" ]]; then
-
-    echo
-
-    error "Could not registrar the update."
-
-    echo
-    echo -e "${YELLOW}Code: ${ACTIVATE_ERROR:-unknown}${RESET}"
-    echo -e "${YELLOW}HTTP  : $ACTIVATE_HTTP${RESET}"
-
-    echo
-
-    echo -e "${GRAY}Respuesta:${RESET}"
-    echo "$ACTIVATE_BODY"
-
-    echo
-
-    warning "The update was already installed."
-    warning "The key was NOT consumed."
-
-    echo
-
-    rm -rf "$TMP"
-
-    exit 1
-
-fi
-
-#=========================================================
-# ACTIVATION CORRECTA
-#=========================================================
-
-ACTIVATION_ID="$(
-    echo "$ACTIVATE_BODY" |
-    jq -r '.activationId // empty'
-)"
-
-echo
-
-ok "Server of activation responded successfully."
-echo -e " ${GRAY}HTTP:${RESET} ${GREEN}${ACTIVATE_HTTP}${RESET}"
-
-echo
-
-ok "Update registrada successfully."
-
-if [[ -n "$ACTIVATION_ID" ]]; then
-
-    echo
-    echo -e " ${GRAY}Activation ID:${RESET} ${WHITE}$ACTIVATION_ID${RESET}"
-
-fi
-
-echo
-ok "The API marked the key as used."
-
-#=========================================================
-# LIMPIAR MEMORIA
-#=========================================================
-
-unset INSTALL_KEY
-unset ACTIVATION_JSON
-unset ACTIVATE_RESPONSE
-unset VALIDATE_JSON
-unset VALIDATE_RESPONSE
 
 #=========================================================
 # LIMPIEZA
@@ -992,10 +462,6 @@ echo -e " ${CYAN}◆${RESET} ${WHITE}Version anterior:${RESET} ${GRAY}${VERSION_
 echo -e " ${CYAN}◆${RESET} ${WHITE}Version installed:${RESET} ${GREEN}${NEW_VERSION}${RESET}"
 
 echo
-
-echo -e " ${CYAN}◆${RESET} ${WHITE}License:${RESET} ${GREEN}ACTIVADA${RESET}"
-echo -e " ${CYAN}◆${RESET} ${WHITE}Propietario:${RESET} ${WHITE}${LICENSE_OWNER}${RESET}"
-echo -e " ${CYAN}◆${RESET} ${WHITE}Revendedor:${RESET} ${WHITE}${LICENSE_RESELLER}${RESET}"
 
 echo
 
