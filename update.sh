@@ -180,7 +180,7 @@ echo
 
 info "Preparing update..."
 
-echo -e " ${GRAY}➜${RESET} Repositorio: ${SKY}$REPO${RESET}"
+echo -e " ${GRAY}➜${RESET} Repositorio: ${SKY}$BASE_URL${RESET}"
 echo -e " ${GRAY}➜${RESET} Destino:     ${SKY}$BASE${RESET}"
 
 echo

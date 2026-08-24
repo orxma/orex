@@ -40,6 +40,12 @@ CLOUDFLARE_STATUS=${CLOUDFLARE_STATUS:-OFF}
 PROXY_STATUS=${PROXY_STATUS:-OFF}
 AUTO_START=${AUTO_START:-OFF}
 
+# Count variables (initialized to 0)
+SSH_COUNT=${SSH_COUNT:-0}
+V2RAY_COUNT=${V2RAY_COUNT:-0}
+HYSTERIA_COUNT=${HYSTERIA_COUNT:-0}
+OPENVPN_COUNT=${OPENVPN_COUNT:-0}
+
 # Detectar HAProxy
 if systemctl is-active --quiet haproxy; then
     SSL="ON"
@@ -115,7 +121,7 @@ USED_RAM=$(free -h | awk '/Mem:/ {print $3}')
 FREE_RAM=$(free -h | awk '/Mem:/ {print $7}')
 
 RAM_USE=$(free | awk '/Mem:/ {printf("%.0f"),$3/$2*100}')
-CPU_USE=$(top -bn1 | grep "Cpu(s)" | awk '{print int($2+$4)}')
+CPU_USE=$(top -bn1 | grep -i "cpu" | head -1 | awk '{print int($2+$4)}')
 
 DISK=$(df -h / | awk 'NR==2 {print $5}')
 
@@ -245,28 +251,10 @@ echo -e "${WHITE}║                    🚀 OPTIMIZAR VPS                      
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
-if [[ -f "$BASE/tools/optimize.sh" ]]; then
-
-    bash "$BASE/tools/optimize.sh"
-
-elif [[ -f "$HOME/multi-script/tools/optimize.sh" ]]; then
-
-    mkdir -p "$BASE/herramientas"
-
-    cp "$HOME/multi-script/tools/optimize.sh" \
-    "$BASE/tools/optimize.sh"
-
-    chmod +x "$BASE/tools/optimize.sh"
-
-    bash "$BASE/tools/optimize.sh"
-
-else
-
-    echo -e "${RED}❌ Not found optimize.sh${RESET}"
-    sleep 2
-    exec bash "$BASE/menu.sh"
-
-fi
+echo -e "${YELLOW}⚠️ Optimizador VPS no está disponible en esta versión.${RESET}"
+echo -e "${GRAY}Esta funcionalidad se agregará en una actualización futura.${RESET}"
+sleep 2
+exec bash "$BASE/menu.sh"
 
 ;;
 #=========================================================
@@ -280,30 +268,10 @@ echo -e "${WHITE}║                  🌐 CAMBIAR DOMINIO                      
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
-if [[ -f "$BASE/tools/change-domain" ]]; then
-
-    bash "$BASE/tools/change-domain"
-
-elif [[ -f "$HOME/multi-script/tools/change-domain" ]]; then
-
-    mkdir -p "$BASE/herramientas"
-
-    cp "$HOME/multi-script/tools/change-domain" \
-       "$BASE/tools/change-domain"
-
-    chmod +x "$BASE/tools/change-domain"
-
-    bash "$BASE/tools/change-domain"
-
-else
-
-    echo -e "${RED}❌ Not found change-domain.${RESET}"
-
-    sleep 2
-
-    exec bash "$BASE/menu.sh"
-
-fi
+echo -e "${YELLOW}⚠️ Cambiar dominio no está disponible en esta versión.${RESET}"
+echo -e "${GRAY}Esta funcionalidad se agregará en una actualización futura.${RESET}"
+sleep 2
+exec bash "$BASE/menu.sh"
 
 ;;
 #=========================================================
