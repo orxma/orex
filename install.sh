@@ -227,7 +227,7 @@ echo
 
 loading "Updating repositories"
 
-export DEBIAN_FRONTEND=noninteractive
+# export DEBIAN_FRONTEND=noninteractive
 
 apt-get update -y >/dev/null 2>&1 || \
     error_exit "Could not update the repositories."
