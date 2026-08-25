@@ -339,7 +339,7 @@ while true; do
     echo -e "  ${RED}${BOLD}[00]${RESET} ↩️  Return to the Menu Principal"
 
     echo
-    echo -e "${GRAY}  ORX Tunnel Multi Script • Privanox VPN • v${VERSION}${RESET}"
+    echo -e "${GRAY}  ORX Tunnel Multi Script • ORX TUNNEL • v${VERSION}${RESET}"
     echo
 
     read -rp "$(echo -e "${CYAN}${BOLD}  ➜ Select an option: ${RESET}")" OP

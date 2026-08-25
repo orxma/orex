@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # =========================================================
-# UNIVERSAL INSTALLER V8.0.5: DEPWISE TELEGRAM BOT 💎 (GO EDITION)
+# UNIVERSAL INSTALLER V8.0.5: ORX TUNNEL TELEGRAM BOT 💎 (GO EDITION)
 # =========================================================
 
 RED='\033[0;31m'
@@ -30,12 +30,12 @@ else
     log_error "Could not detect the operating system."
     exit 1
 fi
-PROJECT_DIR="/opt/depwise_bot"
+PROJECT_DIR="/opt/orxtunnel_bot"
 ENV_FILE="$PROJECT_DIR/.env"
 
 install_bot() {
     echo -e "${GREEN}=================================================="
-    echo -e "       DEPWISE BOT CONFIGURATION V8.0 (GO)"
+    echo -e "       ORX TUNNEL BOT CONFIGURATION V8.0 (GO)"
     echo -e "==================================================${NC}"
         apt update -y >/dev/null 2>&1
     apt install -y curl jq >/dev/null 2>&1
@@ -79,16 +79,16 @@ install_bot() {
     # 3. Clone and Compile Project Repo
     log_info "Downloading and compiling the Bot in Go..."
     cd /tmp
-    rm -rf privanox-code
-    git clone https://github.com/kevinaldaircama/privanox-code.git || { log_error "Error downloading the bot."; exit 1; }
-    cd privanox-code
+    rm -rf depwise
+    git clone https://github.com/orxma/depwise.git || { log_error "Error downloading the bot."; exit 1; }
+    cd depwise
 
     log_info "Downloading required modules..."
     go mod tidy
 
-    go build -o /usr/local/bin/depwise-bot cmd/depwise/main.go
-    chmod +x /usr/local/bin/depwise-bot
-    rm -rf /tmp/privanox-code
+    go build -o /usr/local/bin/orxtunnel-bot cmd/orxtunnel/main.go
+    chmod +x /usr/local/bin/orxtunnel-bot
+    rm -rf /tmp/depwise
     cd ~
 
     # 3.5 Compile BadVPN natively (Ensures compatibility with ARM64/AMD64)
@@ -112,9 +112,9 @@ install_bot() {
 
     # 4. Systemd Service
     log_info "Generating SystemD daemon..."
-    cat << EOF > /etc/systemd/system/depwise.service
+    cat << EOF > /etc/systemd/system/orxtunnel.service
 [Unit]
-Description=Depwise Telegram Bot (Go Edition)
+Description=ORX TUNNEL Telegram Bot (Go Edition)
 After=network.target
 
 [Service]
@@ -122,7 +122,7 @@ Type=simple
 User=root
 EnvironmentFile=$ENV_FILE
 Environment="GOMEMLIMIT=40MiB" "GOGC=20"
-ExecStart=/usr/local/bin/depwise-bot
+ExecStart=/usr/local/bin/orxtunnel-bot
 Restart=always
 RestartSec=5
 
@@ -131,8 +131,8 @@ WantedBy=multi-user.target
 EOF
 
     systemctl daemon-reload
-    systemctl enable depwise.service
-    systemctl restart depwise.service
+    systemctl enable orxtunnel.service
+    systemctl restart orxtunnel.service
     echo -e "${GREEN}=================================================="
     echo -e "       INSTALLATION V8.0 COMPLETED 💎"
     echo -e "=================================================="
@@ -156,8 +156,8 @@ uninstall_all() {
     fi
 
     log_info "1/4 Stopping services..."
-    systemctl stop depwise.service 2>/dev/null || true
-    systemctl disable depwise.service 2>/dev/null || true
+    systemctl stop orxtunnel.service 2>/dev/null || true
+    systemctl disable orxtunnel.service 2>/dev/null || true
 
     # Stop proxies and vpns
     local services=("badvpn" "proxydt" "stunnel4" "dropbear" "falconproxy" "udpcustom" "zivpn" "nsd")
@@ -168,8 +168,8 @@ uninstall_all() {
     done
 
     log_info "2/4 Removing files and binaries..."
-    rm -f /usr/local/bin/depwise-bot
-    rm -f /etc/systemd/system/depwise.service
+    rm -f /usr/local/bin/orxtunnel-bot
+    rm -f /etc/systemd/system/orxtunnel.service
     rm -rf "$PROJECT_DIR"
     rm -f /root/bot_data.json
 
@@ -240,7 +240,7 @@ enable_root() {
 show_menu() {
     clear
     echo -e "${CYAN}=================================================="
-    echo -e "       DEPWISE BOT INSTALLER (GO EDITION)"
+    echo -e "       ORX TUNNEL BOT INSTALLER (GO EDITION)"
     echo -e "==================================================${NC}"
     echo -e "  1. ${GREEN}Install / Update Bot${NC}"
     echo -e "  2. ${RED}Uninstall Everything (Bot + VPNs)${NC}"
