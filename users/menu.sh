@@ -238,7 +238,7 @@ while true; do
     echo -e "  ${RED}${BOLD}[00]${RESET} 🚪 ${WHITE}Return to the Menu Principal${RESET}"
 
     echo
-    echo -e "${GRAY}  ORX Tunnel • ORX TUNNEL • v${VERSION}${RESET}"
+    echo -e "${GRAY}  ORX TUNNEL Multi Script • v${VERSION}${RESET}"
     echo
 
     read -rp "$(echo -e "${CYAN}${BOLD}  ➜ Select an option:${RESET} ")" op
@@ -283,7 +283,7 @@ while true; do
 
             echo
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-            echo -e "${CYAN}║${RESET}              ${MAGENTA}${BOLD}🔄 UPDATEDR ORX TUNNEL${RESET}              ${CYAN}║${RESET}"
+            echo -e "${CYAN}║${RESET}              ${MAGENTA}${BOLD}🔄 UPDATE ORX TUNNEL${RESET}              ${CYAN}║${RESET}"
             echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
             echo
 
@@ -332,7 +332,7 @@ while true; do
 
             echo
             echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-            echo -e "${CYAN}║${RESET} ${GREEN}${BOLD}        ✔ SALIENDO DE ORX TUNNEL MULTI SCRIPT${RESET}        ${CYAN}║${RESET}"
+            echo -e "${CYAN}║${RESET} ${GREEN}${BOLD}        ✔ EXITING ORX TUNNEL MULTI SCRIPT${RESET}        ${CYAN}║${RESET}"
             echo -e "${CYAN}║${RESET}              ${GRAY}Gracias by utilizar el panel${RESET}              ${CYAN}║${RESET}"
             echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
             echo
