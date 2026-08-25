@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #=========================================================
-#        KEVIN TECH MULTI SCRIPT - PREMIUM EDITION
+#        ORX TUNNEL MULTI SCRIPT - PREMIUM EDITION
 #=========================================================
 
 BASE="/etc/orx-tunnel"
@@ -134,7 +134,7 @@ UPTIME=$(uptime -p | sed 's/up //')
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${CYAN}║${RESET} ${BOLD}${WHITE}             KEVIN TECH CONTROL PANEL${RESET}             ${CYAN}║${RESET}"
+echo -e "${CYAN}║${RESET} ${BOLD}${WHITE}             ORX TUNNEL CONTROL PANEL${RESET}             ${CYAN}║${RESET}"
 echo -e "${CYAN}║${RESET} ${GRAY}                  PREMIUM EDITION${RESET}                  ${CYAN}║${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 
@@ -142,13 +142,13 @@ echo ""
 echo -e " ${GOLD}◆${RESET} ${YELLOW}OS${RESET}      ${GRAY}:${RESET} ${WHITE}$OS${RESET}"
 echo -e " ${GOLD}◆${RESET} ${YELLOW}UPTIME${RESET}  ${GRAY}:${RESET} ${WHITE}$UPTIME${RESET}"
 echo -e " ${GOLD}◆${RESET} ${YELLOW}IP/DOM${RESET}  ${GRAY}:${RESET} ${SKY}$IP${RESET} ${GRAY}/${RESET} ${PINK}${SERVER_DOMAIN:-sin-domain}${RESET}"
-echo -e " ${GOLD}◆${RESET} ${YELLOW}DISCO${RESET}   ${GRAY}:${RESET} ${WHITE}$DISK usado${RESET}"
+echo -e " ${GOLD}◆${RESET} ${YELLOW}DISK${RESET}   ${GRAY}:${RESET} ${WHITE}$DISK used${RESET}"
 echo -e " ${GOLD}◆${RESET} ${YELLOW}CPU${RESET}     ${GRAY}:${RESET} ${LIME}${CPU_USE}%${RESET} ${GRAY}|${RESET} ${WHITE}Cores: $CPU${RESET}"
-echo -e " ${GOLD}◆${RESET} ${YELLOW}RAM${RESET}     ${GRAY}:${RESET} ${LIME}${USED_RAM}/${TOTAL_RAM}${RESET} ${GRAY}|${RESET} ${WHITE}Libre: $FREE_RAM${RESET}"
+echo -e " ${GOLD}◆${RESET} ${YELLOW}RAM${RESET}     ${GRAY}:${RESET} ${LIME}${USED_RAM}/${TOTAL_RAM}${RESET} ${GRAY}|${RESET} ${WHITE}Free: $FREE_RAM${RESET}"
 
 echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e " ${MAGENTA}${BOLD}◆ PROTOCOLS ACTIVES${RESET}"
+echo -e " ${MAGENTA}${BOLD}◆ ACTIVE PROTOCOLS${RESET}"
 echo ""
 
 [[ "$OPENSSH" == "ON" ]] && \
@@ -186,9 +186,9 @@ echo ""
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 
 echo -e " ${GOLD}${BOLD}[01]${RESET} ${WHITE}👥 Users SSH${RESET}        ${GOLD}${BOLD}[05]${RESET} ${WHITE}📦 Install protocols${RESET}"
-echo -e " ${GOLD}${BOLD}[02]${RESET} ${WHITE}🛩️ Optimizar VPS${RESET}       ${GOLD}${BOLD}[06]${RESET} ${WHITE}🔄 Update / Remove${RESET}"
+echo -e " ${GOLD}${BOLD}[02]${RESET} ${WHITE}🛩️ Optimize VPS${RESET}       ${GOLD}${BOLD}[06]${RESET} ${WHITE}🔄 Update / Remove${RESET}"
 echo -e " ${GOLD}${BOLD}[03]${RESET} ${WHITE}🌐 Change domain${RESET}     ${GOLD}${BOLD}[00]${RESET} ${WHITE}🚪 Exit${RESET}"
-echo -e " ${GOLD}${BOLD}[04]${RESET} ${WHITE}⚒️ Auto inicio${RESET}"
+echo -e " ${GOLD}${BOLD}[04]${RESET} ${WHITE}⚒️ Auto reboot${RESET}"
 
 echo -e "${CYAN}────────────────────────────────────────────────${RESET}"
 
@@ -222,7 +222,7 @@ case "$OPCION" in
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${WHITE}║                 👥 CREACION DE USERS                      ║${RESET}"
+echo -e "${WHITE}║                 👥 CREATING USERS                      ║${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
@@ -232,7 +232,7 @@ if [[ -f "$BASE/users/menu.sh" ]]; then
 
 else
 
-    echo -e "${RED}❌ El module of users is not installed.${RESET}"
+    echo -e "${RED}❌ The module of users is not installed.${RESET}"
     sleep 2
     exec bash "$BASE/menu.sh"
 
@@ -299,7 +299,7 @@ FILE="/etc/profile.d/orx-tunnel.sh"
 clear
 
 echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-echo -e "${WHITE}║                    🔄 AUTO INICIO                           ║${RESET}"
+echo -e "${WHITE}║                    🔄 AUTO START                           ║${RESET}"
 echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo ""
 
@@ -316,7 +316,7 @@ EOF
 
     chmod +x "$FILE"
 
-    echo -e "${GREEN}✅ Auto inicio activado successfully.${RESET}"
+    echo -e "${GREEN}✅ Auto reboot activated successfully.${RESET}"
 
 else
 
@@ -324,7 +324,7 @@ else
 
     rm -f "$FILE"
 
-    echo -e "${YELLOW}⚠️ Auto inicio desactivado.${RESET}"
+    echo -e "${YELLOW}⚠️ Auto reboot desactivated.${RESET}"
 
 fi
 
@@ -400,7 +400,7 @@ echo -e "${RED}╚════════════════════�
 echo ""
 
 echo -e "${YELLOW}[1]${WHITE} 🗑 Delete ORX Tunnel Multi Script"
-echo -e "${YELLOW}[2]${WHITE} ♻️ Reconstruir / Reinstall VPS"
+echo -e "${YELLOW}[2]${WHITE} ♻️ Reinstall VPS"
 echo -e "${YELLOW}[0]${WHITE} 🔙 Return"
 echo ""
 
@@ -412,7 +412,7 @@ case "$OPDEL" in
 
 clear
 
-echo -e "${RED}⚠️ Deletendo ORX Tunnel Multi Script...${RESET}"
+echo -e "${RED}⚠️ Deleting ORX Tunnel Multi Script...${RESET}"
 
 sleep 1
 
@@ -422,7 +422,7 @@ rm -f /etc/profile.d/orx-tunnel.sh
 
 echo ""
 echo -e "${GREEN}✅ Script deleted successfully.${RESET}"
-echo -e "${GREEN}🧹 System limpiado successfully.${RESET}"
+echo -e "${GREEN}🧹 System cleaned successfully.${RESET}"
 
 sleep 3
 
@@ -518,7 +518,7 @@ else
 fi
 
 echo ""
-echo -e "${CYAN}🚀${RESET} ${WHITE}Regresando al panel...${RESET}"
+echo -e "${CYAN}🚀${RESET} ${WHITE}Returning to the panel...${RESET}"
 
 sleep 2
 
@@ -537,7 +537,7 @@ esac
 clear
 
 echo ""
-echo -e "${GREEN}👋 Gracias by usar ORX Tunnel Multi Script Premium.${RESET}"
+echo -e "${GREEN}👋 Thank you for using ORX Tunnel Multi Script Premium.${RESET}"
 echo ""
 
 exit
