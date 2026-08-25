@@ -156,7 +156,7 @@ error_exit() {
 
     echo
     echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${RED}║${RESET} ${WHITE}${BOLD}❌ INSTALLATION DETENIDA${RESET}"
+    echo -e "${RED}║${RESET} ${WHITE}${BOLD}❌ INSTALLATION DENIED${RESET}"
     echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
     echo -e " ${RED}✖${RESET} ${WHITE}$1${RESET}"
@@ -177,7 +177,7 @@ if [[ "$EUID" -ne 0 ]]; then
 
     echo
     echo -e "${RED}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${RED}║${RESET} ${WHITE}${BOLD}🔒 PERMISOS ROOT NECESARIOS${RESET}"
+    echo -e "${RED}║${RESET} ${WHITE}${BOLD}🔒 ROOT PERMISSIONS NECESSARY${RESET}"
     echo -e "${RED}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
     echo -e "${YELLOW}Run:${RESET}"
@@ -645,7 +645,7 @@ EOF
 #=========================================================
 
 chmod -R 755 "$BASE"
-ok "Permisos configureds."
+ok "Permissions configureds."
 
 #=========================================================
 # COMANDO MENU
@@ -671,12 +671,12 @@ ok "Comando 'menu' installed."
 # ROOT
 #=========================================================
 
-seccion "👑 PASO 5  •  ACCESO ROOT"
+seccion "👑 STEP 5  •  ROOT ACCES"
 
-echo -e "${WHITE}You can establecer a password to root.${RESET}"
+echo -e "${WHITE}You can renew a password to root.${RESET}"
 echo
-echo -e "${GREEN}Y${RESET} = Establecer password root"
-echo -e "${RED}N${RESET} = Continue sin modificar"
+echo -e "${GREEN}Y${RESET} = Renew root password"
+echo -e "${RED}N${RESET} = Continue without changing"
 echo
 
 read -r -p "$(echo -e "${GOLD}[Y/N]:${RESET} ")" ROOT_ACCESS
@@ -741,9 +741,9 @@ fi
 # PROTOCOLS
 #=========================================================
 
-seccion "🚀 PASO 6  •  PROTOCOL INSTALLATION"
+seccion "🚀 STEP 6  •  PROTOCOL INSTALLATION"
 
-echo -e "${WHITE}Protocols seleccionados to automatic installation:${RESET}"
+echo -e "${WHITE}Protocols selected to automatic installation:${RESET}"
 echo
 
 echo -e " ${CYAN}◆${RESET} ${WHITE}BadVPN${RESET}"
@@ -762,7 +762,7 @@ if [[ "$INSTALL_PROTOCOLS" == "ON" ]]; then
 
     echo
     echo -e "${CYAN}╔══════════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}             INSTALANDO PROTOCOLS${RESET}                    ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET} ${WHITE}${BOLD}             INSTALLING PROTOCOLS${RESET}                    ${CYAN}║${RESET}"
     echo -e "${CYAN}╚══════════════════════════════════════════════════════════════╝${RESET}"
     echo
 
@@ -875,7 +875,7 @@ echo -e "\e[1;96m━━━━━━━━━━━━━━━━━━━━━
 if [[ "$EUID" -ne 0 ]]; then
 
     echo -e " 👤 User : $(whoami)"
-    echo -e " 🔒 Status  : No eres root"
+    echo -e " 🔒 Status  : Not root"
     echo -e " 👉 Run: \e[1;96msudo -i\e[0m"
 
 else
@@ -901,7 +901,7 @@ echo -e "${GREEN}║${RESET} ${WHITE}${BOLD}             🎉 INSTALLATION COMPL
 echo -e "${GREEN}╚══════════════════════════════════════════════════════════════╝${RESET}"
 echo
 
-echo -e " ${GREEN}●${RESET} ${WHITE}Server:${RESET} ${CYAN}LISTO${RESET}"
+echo -e " ${GREEN}●${RESET} ${WHITE}Server:${RESET} ${CYAN}READY${RESET}"
 
 echo
 
@@ -931,10 +931,10 @@ REBOOT_SERVER="$(
 if [[ "$REBOOT_SERVER" == "y" ]]; then
 
     echo
-    echo -e "${YELLOW}🔄 Restarting en 5 segundos...${RESET}"
+    echo -e "${YELLOW}🔄 Restarting in 5 seconds...${RESET}"
 
     for i in 5 4 3 2 1; do
-        echo -ne "\r${CYAN}Reinicio en ${WHITE}${i}${CYAN}...${RESET}"
+        echo -ne "\r${CYAN}Rebooting in ${WHITE}${i}${CYAN}...${RESET}"
         sleep 1
     done
 
@@ -946,7 +946,7 @@ else
     echo
     echo -e "${GREEN}✅ Installation completed sin restart.${RESET}"
     echo
-    echo -e "${CYAN}👉 Type ${WHITE}menu${CYAN} to abrir el panel.${RESET}"
+    echo -e "${CYAN}👉 Type ${WHITE}menu${CYAN} to check the panel.${RESET}"
     echo
 
 fi
